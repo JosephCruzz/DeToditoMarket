@@ -1,7 +1,6 @@
 import { Container, Col, Button, Form } from "react-bootstrap"; 
 import { useState, useEffect } from "react";
 import axiosInstance from '../api/axiosInstance';
-import "./TourCard.css";
 
 const TourCard = ({ tour }) => {   
     const [tourCards, setTourCards]=useState([]);
