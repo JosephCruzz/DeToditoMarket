@@ -2,6 +2,7 @@ import { Container, Col, Button } from "react-bootstrap";
 import { useState, useEffect } from "react";
 import axiosInstance from '../api/axiosInstance';
 import TourCard from "./TourCard";
+import "./Tours.css";
 
 const Tours = () => {   
     const [tours, setTours]=useState([]);
