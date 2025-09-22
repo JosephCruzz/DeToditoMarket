@@ -1,13 +1,13 @@
 services:
   database:
     image: postgres:16
-    container_name: BaseDatos
+    container_name: postgresExamen
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: clave123
-      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: saf3password
+      POSTGRES_DB: examenDB
     volumes:
       - db:/var/lib/postgresql/data
 
