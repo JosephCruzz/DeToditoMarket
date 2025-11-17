@@ -2,16 +2,36 @@ const express = require('express');
 const router = express.Router();
 const { pool } = require('../db');  
 
-//http://localhost:3001/api/tours?limit=10&offset=0
-router.get('/tours', async (req, res) => {
-  const limit = parseInt(req.query.limit);
-  const offset = parseInt(req.query.offset);
-  const sql = 'SELECT * FROM tourApp.tour LIMIT $1 OFFSET $2;';
+//http://localhost:3001/api/users
+router.get('/users', async (req, res) => {
+  const sql = 'SELECT * FROM users;';
   try {
-    const result = await pool.query(sql, [limit, offset]);
+    const result = await pool.query(sql);
     res.json(result.rows);
   } catch (err) {
-    console.error('Error fetching rastaurants:', err);
+    console.error('Error fetching users:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/products', async (req, res) => {
+  const sql = 'SELECT * FROM productos;';
+  try {
+    const result = await pool.query(sql);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching products:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+router.get('/providers', async (req, res) => {
+  const sql = 'SELECT * FROM proveedores;';
+  try {
+    const result = await pool.query(sql);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching providers:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });

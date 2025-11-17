@@ -1,13 +1,13 @@
 services:
   database:
     image: postgres:16
-    container_name: postgresExamen
+    container_name: postgresMarket
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: saf3password
-      POSTGRES_DB: examenDB
+      POSTGRES_DB: marketDB
     volumes:
       - db:/var/lib/postgresql/data
 
