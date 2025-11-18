@@ -69,11 +69,11 @@ si llega a tener un conflicto puede ser dependencias de dependecianas que estan 
   },
   ```
   
-  dotenv: variables de entorno
-  express es express .js para post get http sends
-  pg postgres dependencia
-  pg-hstore tambien algo de postgres
-  sequelize es sequelize orm para base de datos
+  dotenv: variables de entorno,
+  express es express .js para post get http sends,
+  pg postgres dependencia,
+  pg-hstore tambien algo de postgres,
+  sequelize es sequelize orm para base de datos,
   y sequelize-cli es para migration sequelize interfaz linea de comandos
 
   --PORFAVOR SI AGREGA UNA NUEVA EXPLICAR PARA QUE ES
