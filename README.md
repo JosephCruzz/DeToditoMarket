@@ -44,6 +44,39 @@ npx sequelize-cli db:migrate
 └── package.json     # Dependencias y scripts
 ```
 
+## Sobre dependencias
+
+ /*
+  Dependencias De desarrollo (osea que no se utilizarian en la produccion ya del sistema solo ayudas para el desarrollo)
+  correr con npm run dev
+  Nodemon: Automaticamente refresca los cambios realizados por un developer
+  */
+  ´´
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },´´
+  /*
+  dotenv: variables de entorno
+  express es express .js para post get http sends
+  pg postgres dependencia
+  pg-hstore tambien algo de postgres
+  sequelize es sequelize orm para base de datos
+  y sequelize-cli es para migration sequelize interfaz linea de comandos
+
+  --PORFAVOR SI AGREGA UNA NUEVA EXPLICAR PARA QUE ES
+  ASI LLEVAMOS ORDEN SI UNA FALLA
+  */
+
+  ´´
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3"
+  }´´
+
 ## Tecnologías Utilizadas
 
 - **Express.js** - Framework web
