@@ -8,6 +8,23 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
+/*cambio a un codigo mas entendible tambien eliminamos sync ya que no se usa
+cuando usamos migrations */
+
+async function authenticateDB(){
+try {
+  await sequelize.authenticate();
+  console.log("Conectado a la base de datos");
+  app.listen(3000, () => {
+    console.log("Servidor corriendo en puerto 3000");    
+  })
+} catch (errr) {
+  console.error("se encontro un error: ",errr);
+  process.exit(1);
+}
+}
+
+authenticateDB();
 
 /*req es request
 pide algo del front end
@@ -21,19 +38,5 @@ app.get("/", (req, res) => {
   res.send("La API esta corriendo..");
 });
 
-sequelize
-  .authenticate()
-  .then(() => {
-    console.log(
-      "Conectado a la base de datos Postgre de Supabase de Detodito Market"
-    );
-    return sequelize.sync();
-  })
 
-  .then(() => {
-    console.log("Modelos vinculados");
-  })
-  .catch((err) => console.error("DB error:", err));
-app.listen(3000, () => console.log("Listening to port 3000"));
 
-//Sincronizar la Base de Datos
