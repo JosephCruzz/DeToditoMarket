@@ -1,0 +1,31 @@
+{
+  "name": "detoditomarket",
+  "version": "0.0.1",
+  "description": "Sistema de gestion de inventario y facturas para DetoditoMarket.",
+  "homepage": "https://github.com/JosephCruzz/DeToditoMarket#readme",
+  "bugs": {
+    "url": "https://github.com/JosephCruzz/DeToditoMarket/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosephCruzz/DeToditoMarket.git"
+  },
+  "license": "ISC",
+  "author": "AndreaQuinn,JosephCruz,BryanBanegas",
+  "type": "commonjs",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.11"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.3"
+  }
+}
