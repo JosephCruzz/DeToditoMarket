@@ -21,15 +21,8 @@ cd DeToditoMarket
 npm install
 ```
 
-3. Configurar variables de entorno:
-   - Copiar el archivo `.env.example` a `.env`
-   - Actualizar las credenciales de la base de datos en `.env`
 
-```bash
-cp .env.example .env
-```
-
-4. Ejecutar migraciones de base de datos:
+3. Ejecutar migraciones de base de datos:
 ```bash
 npx sequelize-cli db:migrate
 ```
@@ -47,7 +40,7 @@ npx sequelize-cli db:migrate
 ├── migrations/      # Migraciones de base de datos
 ├── models/          # Modelos de Sequelize
 ├── server.js        # Punto de entrada de la aplicación
-├── .env.example     # Plantilla de variables de entorno
+├── .env             # Plantilla de variables de entorno
 └── package.json     # Dependencias y scripts
 ```
 
