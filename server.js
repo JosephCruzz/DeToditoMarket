@@ -7,8 +7,6 @@ const sequelize = require("./config/database");
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json());
-
 /*req es request
 pide algo del front end
 
