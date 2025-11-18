@@ -45,17 +45,30 @@ npx sequelize-cli db:migrate
 ```
 
 ## Sobre dependencias
+ Dependecias son paquetes instalados ya sea por 
+ ```bash
+ npm install nodemon u otros tipos de comandos 
+```
+u otros tipos de comandos, la estos se guardan en node_modules y pesan mucho por lo cualen clonar o hacer un push hace que el proyecto tarde mucho en subir, la razon por la cual ponemos eso en .gitignore
 
- /*
+un poco sobre las dependencias ya instaladas las de desarrollo no son obligatorias a tener, pero las otras si, cuando clonemos el proyecto no las tendremos ya que node_modules no se pasaria porque esta ignroado simplemente corremos:
+```bash
+npm install
+```
+y todas las dependencias que estan en package.json se actualizarian,
+
+si llega a tener un conflicto puede ser dependencias de dependecianas que estan en package-lock.json puede necesitar actualziarse o no  som combatibles una version a la otra, en ese caso informarme para ayudar.
+
   Dependencias De desarrollo (osea que no se utilizarian en la produccion ya del sistema solo ayudas para el desarrollo)
   correr con npm run dev
   Nodemon: Automaticamente refresca los cambios realizados por un developer
-  */
-  ´´
+
+ ```json
   "devDependencies": {
     "nodemon": "^3.1.11"
-  },´´
-  /*
+  },
+  ```
+  
   dotenv: variables de entorno
   express es express .js para post get http sends
   pg postgres dependencia
@@ -65,9 +78,9 @@ npx sequelize-cli db:migrate
 
   --PORFAVOR SI AGREGA UNA NUEVA EXPLICAR PARA QUE ES
   ASI LLEVAMOS ORDEN SI UNA FALLA
-  */
+  
 
-  ´´
+ ```json
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
@@ -75,7 +88,8 @@ npx sequelize-cli db:migrate
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "sequelize-cli": "^6.6.3"
-  }´´
+  }
+  ```
 
 ## Tecnologías Utilizadas
 
