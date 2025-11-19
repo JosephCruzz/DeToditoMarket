@@ -38,13 +38,40 @@ npx sequelize-cli db:migrate
 ## Estructura del Proyecto
 
 ```
-├── config/          # Configuración de Sequelize y base de datos
-├── migrations/      # Migraciones de base de datos
-├── models/          # Modelos de Sequelize
-├── server.js        # Punto de entrada de la aplicación
-├── .env             # Plantilla de variables de entorno
-└── package.json     # Dependencias y scripts
+DETODITOMARKET/
+├── 📁 config/
+│   ├── config.js
+│   └── database.js
+├── 📁 controllers/
+├── 📁 migrations/
+├── 📁 models/
+│   ├── index.js
+│   └── UserTest.js
+├── 📁 node_modules/ (deberia esta en .gitignore)
+├── 📁 routes/
+├── 📁 seeders/
+├── 📄 .env
+├── 📄 .gitignore
+├── 📄 .sequelizerc
+├── 📄 app.js
+├── 📄 package-lock.json
+├── 📄 package.json
+├── 📄 README.md
+└── 📄 server.js
 ```
+
+### Descripción de Carpetas y Archivos
+
+- **config/** - Configuración de Sequelize y base de datos
+- **controllers/** - Controladores de la aplicación
+- **migrations/** - Migraciones de base de datos
+- **models/** - Modelos de Sequelize
+- **routes/** - Rutas de la API
+- **seeders/** - Datos de prueba para la base de datos
+- **.env** - Variables de entorno
+- **app.js** - Configuración de Express
+- **server.js** - Punto de entrada de la aplicación
+- **package.json** - Dependencias y scripts del proyecto
 
 ## Sobre dependencias
 
