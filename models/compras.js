@@ -26,15 +26,6 @@ module.exports = function(sequelize, DataTypes) {
         key: 'id'
       }
     },
-    fecha_creacion: {
-      type: DataTypes.DATE,
-      allowNull: true,
-      defaultValue: Sequelize.Sequelize.fn('now')
-    },
-    actualizado_en: {
-      type: DataTypes.DATE,
-      allowNull: true
-    },
     estado: {
       type: DataTypes.STRING,
       allowNull: true,
@@ -44,7 +35,9 @@ module.exports = function(sequelize, DataTypes) {
     sequelize,
     tableName: 'compras',
     schema: 'public',
-    timestamps: false,
+    timestamps: true,
+    createdAt: "fecha_creacion",
+    updatedAt: "actualizado_en",
     indexes: [
       {
         name: "compras_pkey",
