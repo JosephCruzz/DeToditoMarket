@@ -1,7 +1,8 @@
 const express = require("express");
 const app = express();
-const User = require("./models/UserTest");
+const models = require("./models");
 const sequelize = require("./config/database");
+const comprasRoutes = require("./routes/comprasRoutes")
 
 // Middleware
 app.use(express.json());
@@ -34,9 +35,8 @@ pide algo del front end
  osea entro a la pagina principal)
 */
 
-app.get("/", (req, res) => {
-  res.send("La API esta corriendo..");
-});
+app.use("/compras",comprasRoutes)
 
 
 
+app.get("/ping", (req, res) => res.send("pong"));
