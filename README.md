@@ -53,11 +53,10 @@ DETODITOMARKET/
 ├── 📄 .env
 ├── 📄 .gitignore
 ├── 📄 .sequelizerc
-├── 📄 app.js
 ├── 📄 package-lock.json
 ├── 📄 package.json
 ├── 📄 README.md
-└── 📄 server.js
+└── 📄 server.js (Este es equivalente a app.js)
 ```
 
 ### Descripción de Carpetas y Archivos
