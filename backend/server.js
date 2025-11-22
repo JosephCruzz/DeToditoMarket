@@ -1,13 +1,15 @@
 const express = require("express");
 const app = express();
-const User = require("./models/UserTest");
 const sequelize = require("./config/database");
+const userRoute = require("./routes/userRoutes");
+const productoRoute = require("./routes/productoRoutes");
+const proveedorRoute = require("./routes/proveedorRoutes");
 
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-
+app.use("/api", userRoute, proveedorRoute, productoRoute);
 
 /*req es request
 pide algo del front end
@@ -20,6 +22,7 @@ pide algo del front end
 app.get("/", (req, res) => {
   res.send("La API esta corriendo..");
 });
+
 
 sequelize
   .authenticate()
