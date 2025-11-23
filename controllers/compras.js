@@ -5,11 +5,12 @@ exports.addCompra = async (req, res) => {
   try {
     const { proveedor_id, user_id, estado } = req.body;
 
-    if (!user_id) {
+    if (!proveedor_id || !user_id) {
       return res.status(400).json({
-        message: "El campo user_id tiene que tener valores existentes",
+        message: "Los campos proveedor_id y user_id son obligatorios",
       });
     }
+
     const newCompra = await compras.create({
       proveedor_id,
       user_id,
