@@ -4,6 +4,7 @@ const models = require("./models");
 const sequelize = require("./config/database");
 const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
+const caiRoutes = require("./routes/caiRoutes.js");
 const notificacionesRoutes = require("./routes/notificaciones");
 
 
@@ -39,6 +40,7 @@ pide algo del front end
 
 app.use("/compra", comprasRoutes);
 app.use("/detalleCompra", detalleCompraRoutes);
+app.use("/cai", caiRoutes);
 app.use("/notifications", notificacionesRoutes);
 
 
