@@ -39,7 +39,7 @@ pide algo del front end
 
 app.use("/compra", comprasRoutes);
 app.use("/detalleCompra", detalleCompraRoutes);
-app.use("/notifications", notificacionesRoutes);
+app.use("/notificaciones", notificacionesRoutes);
 
 
 app.get("/ping", (req, res) => res.send("pong"));
