@@ -68,3 +68,20 @@ exports.editInventory = async (request, response) => {
         response.status(500).json({error: error.message});
     }
 }
+
+exports.deleteFromInventory = async (request, response) => {
+    try{
+        const { id } = request.params;
+
+        const productDelete = await Producto.findByPk(id);
+        if(!productDelete){
+            return response.status(404).json({message: "No se encontro el producto."});
+        }
+
+        await productDelete.destroy();
+
+        response.json({message: "Producto eliminado con exito."});
+    }catch(error){
+        response.status(500).json({error: error.message});
+    }
+}
