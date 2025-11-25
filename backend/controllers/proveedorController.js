@@ -58,3 +58,19 @@ exports.editSupplier = async (request, response) => {
         response.status(500).json({error: error.message});
     }
 }
+
+exports.deleteSupplier = async (request, response) => {
+    try{
+        const { id } = request.params;
+
+        const supplierDelete = await Proveedor.findByPk(id);
+        if(!supplierDelete){
+            return response.status(404).json({message: "No se encontro el proveedor."});
+        }
+
+        await supplierDelete.destroy();
+        response.json({message: "Proveedor eliminado con exito."});
+    }catch(error){
+        response.status(500).json({error: error.message});
+    }
+}
