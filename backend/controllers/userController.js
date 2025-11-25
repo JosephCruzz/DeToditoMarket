@@ -68,20 +68,3 @@ exports.editUser = async (request, response) => {
         response.status(500).json({error: error.message});
     }
 }
-
-exports.deleteUser = async (request, response) => {
-    try{
-        const { id } = request.params;
-
-        const userDelete = await User.findByPk(id);
-        if(!userDelete){
-            return response.status(404).json({message: "No se encontro el usuario."});
-        }
-
-        await userDelete.destroy();
-
-        response.json({message: "Usuario eliminado con exito."});
-    }catch(error){
-        response.status(500).json({error: error.message});
-    }
-}
