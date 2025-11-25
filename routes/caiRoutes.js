@@ -1,8 +1,8 @@
-import { addCai } from "../controllers/cai";
+const controllersCai = require("../controllers/cai")
 
 const express = require("express");
 const Routes = express.Router();
 
-Routes.post("/crear",addCai);
+Routes.post("/crear",controllersCai.addCai);
 
 module.exports = Routes;
