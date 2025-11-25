@@ -93,5 +93,26 @@ exports.editNotification = async (req, res) => {
   }
 };
 
+// DELETE: deleteNotification
+exports.deleteNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
 
+    const notification = await Notification.findByPk(id);
+    if (!notification) {
+      return res.status(404).json({ message: "La notificacion no existe." });
+    }
+
+    await notification.destroy();
+
+    res.status(200).json({
+      message: "La notificacion se elimino con exito.",
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "Hubo un error al eliminar la notificacion",
+      error: err.message,
+    });
+  }
+};
 
