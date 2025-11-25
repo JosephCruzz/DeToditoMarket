@@ -24,7 +24,7 @@ exports.addNotification = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Notification created successfully",
+      message: "Notification created successfully.",
       notification,
     });
   } catch (err) {
@@ -42,3 +42,23 @@ exports.addNotification = async (req, res) => {
     });
   }
 };
+
+// GET: getNotification (con ID)
+exports.getNotification = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const notification = await Notification.findByPk(id);
+
+    if (!notification) {
+      return res.status(404).json({ message: "La notificacion no existe." });
+    }
+
+    res.status(200).json({ notification });
+  } catch (err) {
+    res.status(500).json({
+      message: "Hubo un error con la notificacion",
+      error: err.message,
+    });
+  }
+};
+
