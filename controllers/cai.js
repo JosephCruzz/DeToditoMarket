@@ -2,9 +2,9 @@ const { cai } = require("../models");
 
 exports.addCai = async (req, res) => {
   const {
-    codigo_cai,
+    codigo_cai, 
     rango_inicial,
-    rango_final,
+    rango_final, 
     fecha_autorizacion,
     fecha_limite_emision,
     estado,
@@ -52,9 +52,14 @@ exports.addCai = async (req, res) => {
     });
     res.status(201).json(addC);
   } catch (err) {
+    if(err.name === "SequelizeUniqueConstraintError"){
+      res.status(409).json({
+        message: "El campo codigo_cai es unique no puede repetirse."
+      })
+    }
     res.status(500).json({
       message: "No se pudo crear Cai",
-      Error: err.message,
+      Error: err.message
     });
   }
 };
