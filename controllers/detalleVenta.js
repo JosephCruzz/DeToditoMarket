@@ -39,8 +39,15 @@ exports.addDetalleVenta = async (req, res) => {
     });
   }
 
-  descuentoN = descuentoN / 100;
-  let total_lineaR = cantidadN * precio_unitarioN * descuentoN;
+  if (descuentoN > 100 || descuento < 0) {
+    return res.status(400).json({
+      message:
+        "Descuento es un valor porcentual no puede ser negativo ni mayor a 100",
+    });
+  }
+
+  descuentoN = (descuentoN / 100) * cantidadN * precio_unitarioN;
+  let total_lineaR = cantidadN * precio_unitarioN - descuentoN;
   try {
     const addDetalleV = await DetalleVenta.create({
       factura_id,
@@ -57,13 +64,13 @@ exports.addDetalleVenta = async (req, res) => {
     return res.status(201).json(addDetalleV);
   } catch (err) {
     if (err.name === "SequelizeForeignKeyConstraintError") {
-      res.status(400).json({
+      return res.status(400).json({
         message:
           "Los campos llenados en las llaves foraneas factura_id y producto_id una o las dos no son existentes",
       });
     }
 
-    res.status(500).json({
+    return res.status(500).json({
       message: "No se pudo añadir detalle de Venta",
       error: err.message,
     });
