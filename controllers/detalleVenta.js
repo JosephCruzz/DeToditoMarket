@@ -13,14 +13,12 @@ exports.addDetalleVenta = async (req, res) => {
     observaciones,
   } = req.body;
 
-  if (
-    !factura_id ||
+  if ( !factura_id ||
     !producto_id ||
     !cantidad ||
     !precio_unitario ||
-    !descuento ||
-    !metodo_pago
-  ) {
+    descuento == null || isNaN(Number(descuento))||
+    !metodo_pago) {
     return res.status(400).json({
       message:
         "Todos los campos excepto fecha, observaciones y total_linea son obligatorios",
