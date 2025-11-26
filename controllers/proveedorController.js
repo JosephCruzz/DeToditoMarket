@@ -12,7 +12,6 @@ exports.getSuppliers = async (request, response) => {
 exports.addSupplier = async (request, response) => {
     try{
         const { 
-            id,
             nombre,
             telefono,
             direccion,
@@ -20,7 +19,6 @@ exports.addSupplier = async (request, response) => {
         } = request.body;
 
         const newSupplier = await Proveedor.create({
-            id,
             nombre,
             telefono,
             direccion,

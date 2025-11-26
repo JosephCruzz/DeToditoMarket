@@ -14,7 +14,6 @@ exports.getUsers = async (request, response) => {
 exports.addUser = async (request, response) => {
     try{
         const { 
-            id,
             username,
             password,
             nombre_completo,
@@ -24,7 +23,6 @@ exports.addUser = async (request, response) => {
 
         const cyptedPassword = await bcrypt.hash(password, 10);
         const newUser = await User.create({
-            id,
             username,
             password: cyptedPassword,
             nombre_completo,
