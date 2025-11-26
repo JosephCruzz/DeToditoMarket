@@ -30,3 +30,24 @@ exports.addCompra = async (req, res) => {
     });
   }
 };
+
+//todas las compras
+exports.getCompra = async (req,res) => {
+  
+  try {
+    const allCompras = await compras.findAll({
+      order: [["fecha_creacion","ASC"]] //orden debido a creacion de menor a mayor
+    });
+    if(allCompras.length === 0){
+    return  res.status(404).json({
+        message: "No se encontraron compras en la base de datos"
+      })
+    }
+   return res.status(200).json(allCompras)
+  } catch (err) {
+   return res.status(500).json({
+      message: "No se pudo obtener los datos",
+      error: err.message
+    })
+  }
+}
