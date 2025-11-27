@@ -48,3 +48,35 @@ exports.getRole = async (req, res) => {
         error: err.message });
   }
 };
+
+// PUT: actualizar rol
+exports.updateRole = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.body) {
+      return res.status(400).json({ message: "El cuerpo de la solicitud está vacío" });
+    }
+
+    const { nombre } = req.body;
+
+    const role = await Role.findByPk(id);
+    if (!role) return res.status(404).json({ message: "Rol no encontrado" });
+
+    if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
+      return res.status(400).json({
+        message: "El campo 'nombre' es obligatorio y debe ser un string no vacío",
+      });
+    }
+
+    await role.update({ nombre: nombre.trim() });
+    res.json({ message: "Rol actualizado exitosamente", role });
+  } catch (err) {
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        message: `Ya existe un rol con el nombre '${req.body.nombre}'`,
+      });
+    }
+    res.status(500).json({ message: "Error al actualizar rol", error: err.message });
+  }
+};
