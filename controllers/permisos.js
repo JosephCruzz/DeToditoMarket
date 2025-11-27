@@ -88,3 +88,18 @@ exports.updatePermiso = async (req, res) => {
     res.status(500).json({ message: "Error al actualizar permiso", error: err.message });
   }
 };
+
+// DELETE: eliminar permiso
+exports.deletePermiso = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const permiso = await Permiso.findByPk(id);
+
+    if (!permiso) return res.status(404).json({ message: "Permiso no encontrado" });
+
+    await permiso.destroy();
+    res.json({ message: "Permiso eliminado exitosamente" });
+  } catch (err) {
+    res.status(500).json({ message: "Error al eliminar permiso", error: err.message });
+  }
+};
