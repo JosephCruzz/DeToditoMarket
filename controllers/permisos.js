@@ -36,3 +36,55 @@ exports.addPermiso = async (req, res) => {
         });
     }
 };
+
+// GET: permiso por ID
+exports.getPermisoById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const permiso = await Permiso.findByPk(id);
+
+    if (!permiso)
+      return res.status(404).json({ message: "Permiso no encontrado" });
+
+    res.json({ permiso });
+  } catch (err) {
+    res.status(500).json({
+      message: "Error al obtener permiso",
+      error: err.message,
+    });
+  }
+};
+
+// PUT: actualizar permiso
+exports.updatePermiso = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (!req.body) {
+      return res
+        .status(400)
+        .json({ message: "El cuerpo de la solicitud está vacío" });
+    }
+
+    const { nombre, descripcion } = req.body;
+
+    const permiso = await Permiso.findByPk(id);
+    if (!permiso)
+      return res.status(404).json({ message: "Permiso no encontrado" });
+
+    if (!nombre || typeof nombre !== "string" || nombre.trim() === "") {
+      return res.status(400).json({
+        message: "El campo 'nombre' es obligatorio y debe ser un string no vacío",
+      });
+    }
+
+    await permiso.update({
+      nombre: nombre.trim(),
+      descripcion: descripcion ? descripcion.trim() : null,
+    });
+
+    res.json({ message: "Permiso actualizado exitosamente", permiso });
+  } catch (err) {
+    res.status(500).json({ message: "Error al actualizar permiso", error: err.message });
+  }
+};
