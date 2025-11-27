@@ -34,6 +34,12 @@ pide algo del front end
  osea entro a la pagina principal)
 */
 
+app.use("/api", userRoute, proveedorRoute, productoRoute);
+app.get("/", (req, res) => {
+  res.send("La API esta corriendo..");
+});
+
+
 app.use("/compra", comprasRoutes);
 
 app.get("/ping", (req, res) => res.send("pong"));
