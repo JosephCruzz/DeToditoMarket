@@ -6,7 +6,7 @@ const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
 const notificacionesRoutes = require("./routes/notificaciones");
 const rolesRoutes = require("./routes/roles");
-
+const permisosRoutes = require("./routes/permisos");
 
 // Middleware
 app.use(express.json());
@@ -42,6 +42,9 @@ app.use("/compra", comprasRoutes);
 app.use("/detalleCompra", detalleCompraRoutes);
 app.use("/notifications", notificacionesRoutes);
 app.use("/roles", rolesRoutes);
+app.use("/permisos", permisosRoutes);
+
 
 
 app.get("/ping", (req, res) => res.send("pong"));
+
