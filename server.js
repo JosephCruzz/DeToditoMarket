@@ -3,6 +3,7 @@ const app = express();
 const models = require("./models");
 const sequelize = require("./config/database");
 const comprasRoutes = require("./routes/comprasRoutes");
+const userRoute = require("./routes/userRoutes");
 
 // Middleware
 app.use(express.json());
@@ -38,7 +39,6 @@ app.use("/api", userRoute, proveedorRoute, productoRoute);
 app.get("/", (req, res) => {
   res.send("La API esta corriendo..");
 });
-
 
 app.use("/compra", comprasRoutes);
 
