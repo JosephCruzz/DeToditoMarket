@@ -58,6 +58,17 @@ exports.addFactura = async (req, res) => {
     });
   }
 
+  const fechaE = new Date(req.body[arrFields[16].name]);
+
+  console.log("\nddddd " + fechaE.getTime());
+
+  if (isNaN(fechaE.getTime())) {
+    return res.status(400).json({
+      status: "Error",
+      message: "El campo tiene que ser una fecha",
+    });
+  }
+
   //addF es como decir addFactura es una abreviacion
   try {
     const addF = await factura.create(req.body);
@@ -66,6 +77,12 @@ exports.addFactura = async (req, res) => {
       message: addF,
     });
   } catch (err) {
+    if (err.name === "SequelizeForeignKeyConstraintError") {
+      return res.status(409).json({
+        status: "Error",
+        message: "El numero de Cai no es existente",
+      });
+    }
     return res.status(500).json({
       status: "Error",
       message: "Hubo un error creando la factura",
