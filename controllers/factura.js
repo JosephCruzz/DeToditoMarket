@@ -1,0 +1,75 @@
+const { factura } = require("../models");
+const validateFields = require("../utils/fieldChecks");
+
+exports.addFactura = async (req, res) => {
+  /*
+  const {
+    cai_id,
+    rtn_emisor,
+    nombre_emisor,
+    direccion_emisor,
+    telefono_emisor,
+    correo_emisor,
+    nombre_cliente,
+    rtn_cliente,
+    direccion_cliente,
+    telefono_cliente,
+    numero_factura,
+    metodo_pago,
+    moneda,
+    subtotal,
+    impuestos,
+    total,
+    fecha_emision,
+    observaciones,
+  } = req.body;*/
+
+  const arrFields = [
+    { name: "cai_id", type: "number" },
+    { name: "rtn_emisor", type: "string" },
+    { name: "nombre_emisor", type: "string" },
+    { name: "direccion_emisor", type: "string" },
+    { name: "telefono_emisor", type: "string" },
+    { name: "correo_emisor", type: "string" },
+    { name: "nombre_cliente", type: "string" },
+    { name: "rtn_cliente", type: "string" },
+    { name: "direccion_cliente", type: "string" },
+    { name: "telefono_cliente", type: "string" },
+    { name: "numero_factura", type: "string" },
+    { name: "metodo_pago", type: "string" },
+    { name: "moneda", type: "string" },
+    { name: "subtotal", type: "number" },
+    { name: "impuestos", type: "number" },
+    { name: "total", type: "number" },
+    { name: "fecha_emision", type: "string" }, // or Date
+    { name: "observaciones", type: "string" },
+  ];
+
+  validateFields(arrFields, req.body, res);
+
+  const facturaesRepetida = await factura.findOne({
+    where: { numero_factura: req.body["numero_factura"] },
+  });
+
+  if (facturaesRepetida) {
+    return res.status(400).json({
+      status: "Error",
+      message: "El numero de factura tiene que ser único.",
+    });
+  }
+
+  //addF es como decir addFactura es una abreviacion
+  try {
+    const addF = await factura.create(req.body);
+    return res.status(201).json({
+      status: "Success",
+      message: addF,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: "Hubo un error creando la factura",
+      error: err.name,
+    });
+  }
+};
