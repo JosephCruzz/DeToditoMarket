@@ -166,3 +166,39 @@ exports.editFactura = async (req, res) => {
     });
   }
 };
+
+exports.deleteFactura = async (req, res) => {
+  const { numero_factura } = req.params;
+
+  try {
+    const fac = await factura.findOne({
+      where: { numero_factura },
+    });
+
+    if (!fac) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se encontró la factura seleccionada",
+      });
+    }
+
+    if (fac.estado === "ANULADA") {
+      return res.status(409).json({
+        status: "Error",
+        message: "La factura ya se encuentra anulada.",
+      });
+    }
+
+    await fac.update({ estado: "ANULADA" });
+
+    return res.status(200).json({
+      status: "Success",
+      message: "La factura ha sido anulada con éxito.",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
+    });
+  }
+};
