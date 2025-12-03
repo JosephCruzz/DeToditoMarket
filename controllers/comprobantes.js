@@ -133,3 +133,21 @@ exports.editComprobante = async (req, res) => {
 };
 
 // GET: obtener comprobante
+exports.getComprobante = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const comprobante = await Comprobante.findByPk(id);
+
+        if (!comprobante) {
+            return res.status(404).json({ message: "Comprobante no encontrado" });
+        }
+
+        res.status(200).json(comprobante);
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al obtener comprobante",
+            error: err.message
+        });
+    }
+};
