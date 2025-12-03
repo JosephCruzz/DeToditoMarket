@@ -13,7 +13,7 @@ exports.addDetalleVenta = async (req, res) => {
   ];
 
   try {
-    console.log(typeof req.body["descuento"]);
+
 
     for (const fields of arrFields) {
       if (typeof req.body[fields.name] !== fields.type) {
