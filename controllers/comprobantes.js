@@ -64,3 +64,72 @@ exports.addComprobante = async (req, res) => {
         });
     }
 };
+
+// PUT: editar comprobante
+exports.editComprobante = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const comprobante = await Comprobante.findByPk(id);
+
+        if (!comprobante) {
+            return res.status(404).json({
+                message: "Comprobante no encontrado"
+            });
+        }
+
+        const {
+            factura_id,
+            caja_id,
+            tipo,
+            numero_referencia,
+            monto,
+            observaciones
+        } = req.body;
+
+        if (tipo !== undefined) {
+            const tiposValidos = ["efectivo", "transferencia"];
+            if (!tiposValidos.includes(tipo.toLowerCase())) {
+                return res.status(400).json({
+                    message: "El campo 'tipo' solo acepta 'efectivo' o 'transferencia'"
+                });
+            }
+        }
+
+        if (monto !== undefined) {
+            if (isNaN(monto) || Number(monto) <= 0) {
+                return res.status(400).json({
+                    message: "El campo 'monto' debe ser un número mayor que 0"
+                });
+            }
+        }
+
+        await comprobante.update({
+            factura_id,
+            caja_id,
+            tipo: tipo?.toLowerCase(),
+            numero_referencia,
+            monto,
+            observaciones
+        });
+
+        return res.status(200).json({
+            message: "Comprobante actualizado exitosamente",
+            comprobante
+        });
+
+    } catch (err) {
+        if (err.name === "SequelizeForeignKeyConstraintError") {
+            return res.status(400).json({
+                message: "Factura o caja no válida"
+            });
+        }
+
+        return res.status(500).json({
+            message: "Error al actualizar comprobante",
+            error: err.message
+        });
+    }
+};
+
+// GET: obtener comprobante
