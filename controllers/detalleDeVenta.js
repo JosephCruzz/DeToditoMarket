@@ -71,3 +71,49 @@ exports.getDetalleVenta = async (req, res) => {
     });
   }
 };
+
+exports.editDetalleVenta = async (req, res) => {
+  try {
+    for (const fields of arrFields) {
+      if (!req.body[fields.name] && req.body[fields.name] !== 0) {
+        return res.status(400).json({
+          status: "Error",
+          message: "El campo" + fields.name + " esta vacio",
+        });
+      }
+      if (typeof req.body[fields.name] === fields.type) {
+        return res.status(400).json({
+          status: "Error",
+          message:
+            "El campo " + fields.name + " deberia ser de tipo: " + fields.type,
+        });
+      }
+    }
+
+    const { id } = req.params;
+
+    const UdetalleVenta = await DetalleVenta.update(req.body, {
+      where: {
+        id: id,
+        returning: true,
+      },
+    });
+
+    if (!UdetalleVenta.length === 0) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se pudo encontrar con ese código una venta",
+      });
+    }
+
+    return res.status(200).json({
+      status: "Sucess",
+      message: UdetalleVenta,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
+    });
+  }
+};
