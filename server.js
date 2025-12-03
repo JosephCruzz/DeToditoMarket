@@ -8,6 +8,7 @@ const notificacionesRoutes = require("./routes/notificaciones");
 const rolesRoutes = require("./routes/roles");
 const permisosRoutes = require("./routes/permisos");
 const comprobantesRoutes = require("./routes/comprobantes");
+const auditoriaRoutes = require("./routes/auditoria");
 
 
 // Middleware
@@ -46,6 +47,7 @@ app.use("/notifications", notificacionesRoutes);
 app.use("/roles", rolesRoutes);
 app.use("/permisos", permisosRoutes);
 app.use("/comprobantes", comprobantesRoutes);
+app.use("/auditoria", auditoriaRoutes);
 
 
 app.get("/ping", (req, res) => res.send("pong"));
