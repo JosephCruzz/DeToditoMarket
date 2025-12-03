@@ -13,20 +13,17 @@ exports.addDetalleVenta = async (req, res) => {
   ];
 
   try {
-
-
     for (const fields of arrFields) {
-      if (typeof req.body[fields.name] !== fields.type) {
-        return res.status(400).json({
-          status: "Error",
-          message: fields.name + " tiene que ser de tipo " + fields.type,
-        });
-      }
-
       if (!req.body[fields.name] && req.body[fields.name] !== 0) {
         return res.status(400).json({
           status: "Error",
           message: "El campo " + fields.name + " no puede estar vacio",
+        });
+      }
+      if (typeof req.body[fields.name] !== fields.type) {
+        return res.status(400).json({
+          status: "Error",
+          message: fields.name + " tiene que ser de tipo " + fields.type,
         });
       }
     }
@@ -47,7 +44,7 @@ exports.addDetalleVenta = async (req, res) => {
     }
     return res.status(500).json({
       status: "Error",
-      message: err.name,
+      message: err.message,
     });
   }
 };
