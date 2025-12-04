@@ -73,7 +73,22 @@ exports.getDetalleVenta = async (req, res) => {
 };
 
 exports.editDetalleVenta = async (req, res) => {
+  const { id } = req.params;
   try {
+    if (!id) {
+      return res.status(400).json({
+        status: "Error",
+        message: "Debe ingresar el número de identificación",
+      });
+    }
+
+    if (!(await DetalleVenta.findByPk(id))) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se encontró ese número de identificación",
+      });
+    }
+
     for (const fields of arrFields) {
       if (!req.body[fields.name] && req.body[fields.name] !== 0) {
         return res.status(400).json({
@@ -81,7 +96,8 @@ exports.editDetalleVenta = async (req, res) => {
           message: "El campo" + fields.name + " esta vacio",
         });
       }
-      if (typeof req.body[fields.name] === fields.type) {
+
+      if (typeof req.body[fields.name] !== fields.type) {
         return res.status(400).json({
           status: "Error",
           message:
@@ -89,26 +105,16 @@ exports.editDetalleVenta = async (req, res) => {
         });
       }
     }
-
-    const { id } = req.params;
-
     const UdetalleVenta = await DetalleVenta.update(req.body, {
       where: {
         id: id,
-        returning: true,
       },
+      returning: true,
     });
 
-    if (!UdetalleVenta.length === 0) {
-      return res.status(404).json({
-        status: "Error",
-        message: "No se pudo encontrar con ese código una venta",
-      });
-    }
-
     return res.status(200).json({
-      status: "Sucess",
-      message: UdetalleVenta,
+      status: "Success",
+      message: UdetalleVenta[1],
     });
   } catch (err) {
     return res.status(500).json({
