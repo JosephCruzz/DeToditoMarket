@@ -46,12 +46,29 @@
     width: 100%;
 }
 .table-productos tr th{
+    padding: .75rem .75rem;
+    vertical-align: middle;
     font-weight: 480;
+    border-bottom: 1px solid #000000;
+}
+.table-productos td{
+    padding: .75rem .75rem;
+    vertical-align: middle;
+    border-bottom: 1px solid #000000;
+}
+.table-productos tr:hover{
+    background: #eaf8ff;
+}
+.table-productos thead tr:first-child th:first-child{
+    border-top-left-radius: 10px;
+}
+.table-productos thead tr:first-child th:last-child{
+    border-top-right-radius: 10px;
 }
 .body-scroll{
     max-height: 350px;
     overflow-y: auto;
-    display: block;
+    display: table-row-group;
 }
 
 .modal-overlay{
@@ -122,4 +139,24 @@
     height: 40px;
     background: #2a4eec;
     color: #ffff;
+}
+
+.options-add-button{ 
+    padding: 5px; 
+    color: #2a4eec;
+}
+.options-edit-button{ 
+    padding: 5px; 
+    color: #51ec2a;
+}
+.options-delete-button{ 
+    padding: 5px; 
+    color: #cd0000;
+}
+.option-buttons button:hover{
+    background: #a1e0ff;  
+}
+.svg-20{
+    height: 15px;
+    width: 15px;
 }
