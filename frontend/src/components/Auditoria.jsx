@@ -6,8 +6,8 @@ const Auditoria = () => {
     
     const [auditorias, setauditorias] = useState([]);
 
-    {/*useEffect(() => {   
-        axiosInstance.get('user/getUsers')
+    useEffect(() => {   
+        axiosInstance.get('audit/')
         .then(response => {
             setauditorias(response.data);
             console.log(response.data);
@@ -15,13 +15,12 @@ const Auditoria = () => {
         .catch(error => {
             console.error('There was an error!', error);
         });     
-    }, []);*/}
+    }, []);
 
     return(
         <div className='gestion-container'>
             <div className='title-header'>
-                <h1>Reportes de Ventas</h1>
-                <button onClick={()=>openFormAdd()}>+ Agregar Venta</button>
+                <h1>Auditoria</h1>
             </div>
             <div className='table-container'>
                 <div className='body-scroll'>

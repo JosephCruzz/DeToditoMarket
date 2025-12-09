@@ -12,6 +12,7 @@ import proveedoresIcon from '../images/ProveedoresIcon.png';
 
 const Header = () => {
 
+    const [reportesMenu, setReportesMenu] = useState(false);
     const [navigateView, setNavigateView] = useState(0);
     const navigate = useNavigate();
 
@@ -25,6 +26,15 @@ const Header = () => {
                 break;
             case 2:
                 navigate("/gestion/proveedores");
+                break;
+            case 3:
+                navigate("/reportes/ventas");
+                break;
+            case 4:
+                navigate("/reportes/compras");
+                break;
+            case 5:
+                navigate("/reportes/auditoria");
                 break;
             default:
                 break;
@@ -88,13 +98,26 @@ const Header = () => {
                     />
                     <label>Usuarios</label>
                 </div>
-                <div className='options'>
+                <div className='options' onClick={()=>setReportesMenu(!reportesMenu)}>
                     <img
                     src={reportesIcon}
                     alt='icon' 
                     style={{width: '50px', height: '50px'}} 
                     />
                     <label>Reportes</label>
+                    {reportesMenu && (
+                        <div className='dropdown-reportes'>
+                            <label className='dropdown-options' onClick={()=>setNavigateView(3)}>
+                                Reportes de Ventas
+                            </label>
+                            <label className='dropdown-options' onClick={()=>setNavigateView(4)}>
+                                Reportes de Compras
+                            </label>
+                            <label className='dropdown-options' onClick={()=>setNavigateView(5)}>
+                                Auditoria
+                            </label>
+                        </div>
+                    )}
                 </div>
                 <div className='options' onClick={()=>setNavigateView(2)}>
                     <img
