@@ -1,4 +1,5 @@
-const Producto = require("../models/producto");
+const db = require("../models");
+const Producto = db.producto;
 
 exports.getInventory = async (request, response) => {
     try{

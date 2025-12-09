@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "producto",
+    "compras",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -9,25 +9,25 @@ module.exports = function (sequelize, DataTypes) {
         primaryKey: true,
         autoIncrement: true,
       },
-      nombre: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      precio: {
-        type: DataTypes.DECIMAL,
-        allowNull: true,
-      },
-      stock: {
+      proveedor_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
+        references: {
+          model: "proveedores",
+          key: "id",
+        },
       },
-      stock_minimo: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
-      },
-      fecha_vencimiento: {
+      fecha: {
         type: DataTypes.DATE,
         allowNull: true,
+      },
+      user_id: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "users",
+          key: "id",
+        },
       },
       estado: {
         type: DataTypes.STRING,
@@ -37,12 +37,14 @@ module.exports = function (sequelize, DataTypes) {
     },
     {
       sequelize,
-      tableName: "producto",
+      tableName: "compras",
       schema: "public",
-      timestamps: false,
+      timestamps: true,
+      createdAt: "fecha_creacion",
+      updatedAt: "actualizado_en",
       indexes: [
         {
-          name: "producto_pkey",
+          name: "compras_pkey",
           unique: true,
           fields: [{ name: "id" }],
         },

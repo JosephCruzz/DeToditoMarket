@@ -1,6 +1,6 @@
-const User = require("../models/User");
+const db = require("../models");
+const User = db.users;
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
 exports.getUsers = async (request, response) => {
     try{

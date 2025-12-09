@@ -1,7 +1,7 @@
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
-    "proveedores",
+    "roles",
     {
       id: {
         type: DataTypes.INTEGER,
@@ -11,30 +11,23 @@ module.exports = function (sequelize, DataTypes) {
       },
       nombre: {
         type: DataTypes.STRING,
-        allowNull: true,
-      },
-      telefono: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      direccion: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      estado: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        defaultValue: "activo",
+        allowNull: false,
+        unique: "roles_nombre_key",
       },
     },
     {
       sequelize,
-      tableName: "proveedores",
+      tableName: "roles",
       schema: "public",
       timestamps: false,
       indexes: [
         {
-          name: "proveedores_pkey",
+          name: "roles_nombre_key",
+          unique: true,
+          fields: [{ name: "nombre" }],
+        },
+        {
+          name: "roles_pkey",
           unique: true,
           fields: [{ name: "id" }],
         },

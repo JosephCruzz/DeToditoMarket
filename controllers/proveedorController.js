@@ -1,4 +1,5 @@
-const Proveedor = require("../models/proveedores");
+const db = require("../models");
+const Proveedor = db.proveedores;
 
 exports.getSuppliers = async (request, response) => {
     try{
