@@ -44,6 +44,18 @@ pide algo del front end
 */
 
 app.use("/compra", comprasRoutes);
+app.use("/detalleCompra", detalleCompraRoutes);
+app.use("/notifications", notificacionesRoutes);
+app.use("/roles", rolesRoutes);
+app.use("/cai", caiRoutes);
+app.use("/detalleVenta", detalleVentaRoutes);
+
+
+app.use("/permisos", permisosRoutes);
+app.use("/comprobantes", comprobantesRoutes);
+
+
+app.use("/factura", facturaRoutes);
 
 app.get("/ping", (req, res) => res.send("pong"));
 
