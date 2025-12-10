@@ -5,11 +5,15 @@ const sequelize = require("./config/database");
 const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
 const notificacionesRoutes = require("./routes/notificaciones");
+const caiRoutes = require("./routes/caiRoutes.js");
+const detalleVentaRoutes = require("./routes/detalleVentaRoutes.js")
 const rolesRoutes = require("./routes/roles");
 const permisosRoutes = require("./routes/permisos");
 const comprobantesRoutes = require("./routes/comprobantes");
 const auditoriaRoutes = require("./routes/auditoria");
 
+const facturaRoutes = require("./routes/facturaRoutes");
+const detalleDeVentaRoutes = require("./routes/detalleDeVentaRoutes");
 
 // Middleware
 app.use(express.json());
@@ -45,10 +49,18 @@ app.use("/compra", comprasRoutes);
 app.use("/detalleCompra", detalleCompraRoutes);
 app.use("/notifications", notificacionesRoutes);
 app.use("/roles", rolesRoutes);
+app.use("/cai", caiRoutes);
+app.use("/detalleVenta", detalleVentaRoutes);
+
+
 app.use("/permisos", permisosRoutes);
 app.use("/comprobantes", comprobantesRoutes);
 app.use("/auditoria", auditoriaRoutes);
 
+
+app.use("/factura", facturaRoutes);
+
+app.use("/detalleDeVenta", detalleDeVentaRoutes);
 
 app.get("/ping", (req, res) => res.send("pong"));
 
