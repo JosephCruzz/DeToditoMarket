@@ -1,6 +1,26 @@
 const { factura } = require("../models");
 const validateFields = require("../utils/fieldChecks");
 
+const arrFields = [
+  { name: "cai_id", type: "number" },
+  { name: "rtn_emisor", type: "string" },
+  { name: "nombre_emisor", type: "string" },
+  { name: "direccion_emisor", type: "string" },
+  { name: "telefono_emisor", type: "string" },
+  { name: "correo_emisor", type: "string" },
+  { name: "nombre_cliente", type: "string" },
+  { name: "rtn_cliente", type: "string" },
+  { name: "direccion_cliente", type: "string" },
+  { name: "telefono_cliente", type: "string" },
+  { name: "numero_factura", type: "string" },
+  { name: "metodo_pago", type: "string" },
+  { name: "moneda", type: "string" },
+  { name: "subtotal", type: "number" },
+  { name: "impuestos", type: "number" },
+  { name: "total", type: "number" },
+  { name: "fecha_emision", type: "string" }, // or Date
+  { name: "observaciones", type: "string" },
+];
 exports.addFactura = async (req, res) => {
   /*
   const {
@@ -23,27 +43,6 @@ exports.addFactura = async (req, res) => {
     fecha_emision,
     observaciones,
   } = req.body;*/
-
-  const arrFields = [
-    { name: "cai_id", type: "number" },
-    { name: "rtn_emisor", type: "string" },
-    { name: "nombre_emisor", type: "string" },
-    { name: "direccion_emisor", type: "string" },
-    { name: "telefono_emisor", type: "string" },
-    { name: "correo_emisor", type: "string" },
-    { name: "nombre_cliente", type: "string" },
-    { name: "rtn_cliente", type: "string" },
-    { name: "direccion_cliente", type: "string" },
-    { name: "telefono_cliente", type: "string" },
-    { name: "numero_factura", type: "string" },
-    { name: "metodo_pago", type: "string" },
-    { name: "moneda", type: "string" },
-    { name: "subtotal", type: "number" },
-    { name: "impuestos", type: "number" },
-    { name: "total", type: "number" },
-    { name: "fecha_emision", type: "string" }, // or Date
-    { name: "observaciones", type: "string" },
-  ];
 
   validateFields(arrFields, req.body, res);
 
@@ -87,6 +86,30 @@ exports.addFactura = async (req, res) => {
       status: "Error",
       message: "Hubo un error creando la factura",
       error: err.name,
+    });
+  }
+};
+
+exports.getFactura = async (req, res) => {
+  try {
+    const allFactura = await factura.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    if (allFactura.length === 0) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se encontraron Facturas",
+      });
+    }
+    return res.status(200).json({
+      status: "Success",
+      message: allFactura,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
     });
   }
 };
