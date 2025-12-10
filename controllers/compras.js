@@ -1,5 +1,4 @@
 const { compras, sequelize } = require("../models");
-const detalleCompras = require("../models/detalleCompra");
 
 exports.addCompra = async (req, res) => {
   try {
