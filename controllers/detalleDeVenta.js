@@ -123,3 +123,37 @@ exports.editDetalleVenta = async (req, res) => {
     });
   }
 };
+
+exports.deleteDetalleVenta = async (req, res) => {
+  const { id } = req.params;
+  try {
+    if (!(await DetalleVenta.findByPk(id))) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se pudo encontrar esa venta.",
+      });
+    }
+
+    const DetalleVentaEliminada = await DetalleVenta.destroy({
+      where: {
+        id: id,
+      },
+    });
+    if (!DetalleVentaEliminada) {
+      return res.status(400).json({
+        status: "Error",
+        message: "No se pudo eliminar la venta.",
+      });
+    }
+
+    return res.status(200).json({
+      status: "Success",
+      message: "Se eliminó exitosamente la Venta",
+    });
+  } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      messages: err.message,
+    });
+  }
+};
