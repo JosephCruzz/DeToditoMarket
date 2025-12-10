@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-const comprobantesController = require("../controllers/comprobantes.js");
+const permisosController = require("../controllers/comprobantes.js");
 
-router.post("/crear", comprobantesController.addComprobante);
-router.put("/:id", comprobantesController.editComprobante);
-router.get("/:id", comprobantesController.getComprobante);
+router.post("/crear", permisosController.addComprobante);
+router.put("/:id", permisosController.editComprobante);
 
 
 module.exports = router;
