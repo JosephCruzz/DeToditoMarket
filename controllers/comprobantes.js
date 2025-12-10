@@ -151,3 +151,25 @@ exports.getComprobante = async (req, res) => {
         });
     }
 };
+
+// DELETE: eliminar comprobante
+exports.deleteComprobante = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const comprobante = await Comprobante.findByPk(id);
+
+        if (!comprobante) {
+            return res.status(404).json({ message: "Comprobante no encontrado" });
+        }
+
+        await comprobante.destroy();
+
+        res.status(200).json({ message: "Comprobante eliminado exitosamente" });
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al eliminar comprobante",
+            error: err.message
+        });
+    }
+};
