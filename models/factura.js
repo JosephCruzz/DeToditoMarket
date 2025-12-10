@@ -89,6 +89,11 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      estado: {
+        type: DataTypes.ENUM("VIGENTE", "ANULADA"),
+        allowNull: false,
+        defaultValue: "VIGENTE",
+      },
     },
     {
       sequelize,

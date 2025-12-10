@@ -124,7 +124,7 @@ exports.editFactura = async (req, res) => {
     if (isNaN(fechEm.getTime())) {
       return res.status(400).json({
         status: "Error",
-        message: "La fecha esta incorrecta tiene que ser formato YYYY-MM-DD",
+        message: "La fecha está incorrecta tiene que ser formato YYYY-MM-DD",
       });
     }
 
@@ -160,6 +160,40 @@ exports.editFactura = async (req, res) => {
         message: "El numero de factura tiene que ser único.",
       });
     }
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
+    });
+  }
+};
+
+exports.deleteFactura = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const fac = await factura.findByPk(id);
+    console.log(id)
+    if (!fac) {
+      return res.status(404).json({
+        status: "Error",
+        message: "No se encontró la factura seleccionada",
+      });
+    }
+
+    if (fac.estado === "ANULADA") {
+      return res.status(409).json({
+        status: "Error",
+        message: "La factura ya se encuentra anulada.",
+      });
+    }
+
+    await fac.update({ estado: "ANULADA" });
+
+    return res.status(200).json({
+      status: "Success",
+      message: "La factura ha sido anulada con éxito.",
+    });
+  } catch (err) {
     return res.status(500).json({
       status: "Error",
       message: err.message,
