@@ -1,6 +1,7 @@
 const { factura } = require("../models");
 const validateFields = require("../utils/fieldChecks");
 
+// al cambiar cambiar variable date revisar endpoints
 const arrFields = [
   { name: "cai_id", type: "number" },
   { name: "rtn_emisor", type: "string" },
@@ -59,8 +60,6 @@ exports.addFactura = async (req, res) => {
 
   const fechaE = new Date(req.body[arrFields[16].name]);
 
-  console.log("\nddddd " + fechaE.getTime());
-
   if (isNaN(fechaE.getTime())) {
     return res.status(400).json({
       status: "Error",
@@ -107,6 +106,60 @@ exports.getFactura = async (req, res) => {
       message: allFactura,
     });
   } catch (err) {
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
+    });
+  }
+};
+
+exports.editFactura = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    validateFields(arrFields, req.body, res);
+
+    const fechEm = new Date(req.body[arrFields[16].name]);
+
+    if (isNaN(fechEm.getTime())) {
+      return res.status(400).json({
+        status: "Error",
+        message: "La fecha esta incorrecta tiene que ser formato YYYY-MM-DD",
+      });
+    }
+
+    const findPk = await factura.findByPk(id);
+
+    if (!findPk) {
+      return res.status(400).json({
+        status: "Error",
+        message: "Esta factura no es existente.",
+      });
+    }
+
+    const updateF = await factura.update(req.body, {
+      where: { id },
+      returning: true,
+    });
+
+    return res.status(200).json({
+      status: "Success",
+      message: updateF,
+    });
+  } catch (err) {
+    if (err.name === "SequelizeForeignKeyConstraintError") {
+      return res.status(400).json({
+        status: "Error",
+        message: "El numero de cai es inválido.",
+      });
+    }
+
+    if (err.name === "SequelizeUniqueConstraintError") {
+      return res.status(409).json({
+        status: "Error",
+        message: "El numero de factura tiene que ser único.",
+      });
+    }
     return res.status(500).json({
       status: "Error",
       message: err.message,
