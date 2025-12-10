@@ -124,7 +124,7 @@ exports.editFactura = async (req, res) => {
     if (isNaN(fechEm.getTime())) {
       return res.status(400).json({
         status: "Error",
-        message: "La fecha esta incorrecta tiene que ser formato YYYY-MM-DD",
+        message: "La fecha está incorrecta tiene que ser formato YYYY-MM-DD",
       });
     }
 
@@ -168,13 +168,11 @@ exports.editFactura = async (req, res) => {
 };
 
 exports.deleteFactura = async (req, res) => {
-  const { numero_factura } = req.params;
+  const { id } = req.params;
 
   try {
-    const fac = await factura.findOne({
-      where: { numero_factura },
-    });
-
+    const fac = await factura.findByPk(id);
+    console.log(id)
     if (!fac) {
       return res.status(404).json({
         status: "Error",
