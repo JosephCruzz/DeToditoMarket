@@ -4,7 +4,11 @@ const models = require("./models");
 const sequelize = require("./config/database");
 const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
+const notificacionesRoutes = require("./routes/notificaciones");
 const caiRoutes = require("./routes/caiRoutes.js");
+const detalleVentaRoutes = require("./routes/detalleVentaRoutes.js")
+const rolesRoutes = require("./routes/roles");
+
 
 // Middleware
 app.use(express.json());
@@ -38,6 +42,12 @@ pide algo del front end
 
 app.use("/compra", comprasRoutes);
 app.use("/detalleCompra", detalleCompraRoutes);
+app.use("/notifications", notificacionesRoutes);
+app.use("/roles", rolesRoutes);
 app.use("/cai", caiRoutes);
+app.use("/detalleVenta", detalleVentaRoutes);
+
+
+
 
 app.get("/ping", (req, res) => res.send("pong"));
