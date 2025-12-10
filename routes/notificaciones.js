@@ -8,9 +8,4 @@ routes.get("/:id", controllersNotificaciones.getNotification);
 routes.put("/:id", controllersNotificaciones.editNotification);
 routes.delete("/:id", controllersNotificaciones.deleteNotification);
 
-<<<<<<< HEAD
-
-=======
-//test
->>>>>>> origin
 module.exports = routes;
