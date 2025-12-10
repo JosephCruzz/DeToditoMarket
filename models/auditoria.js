@@ -33,12 +33,17 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.TEXT,
         allowNull: true,
       },
+      created_at: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: Sequelize.Sequelize.fn("now"),
+      },
     },
     {
       sequelize,
       tableName: "auditoria",
       schema: "public",
-      timestamps: true,
+      timestamps: false,
       indexes: [
         {
           name: "auditoria_pkey",

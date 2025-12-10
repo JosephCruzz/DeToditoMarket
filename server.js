@@ -10,6 +10,7 @@ const detalleVentaRoutes = require("./routes/detalleVentaRoutes.js")
 const rolesRoutes = require("./routes/roles");
 const permisosRoutes = require("./routes/permisos");
 const comprobantesRoutes = require("./routes/comprobantes");
+const auditoriaRoutes = require("./routes/auditoria");
 
 const facturaRoutes = require("./routes/facturaRoutes");
 const detalleDeVentaRoutes = require("./routes/detalleDeVentaRoutes");
@@ -54,6 +55,7 @@ app.use("/detalleVenta", detalleVentaRoutes);
 
 app.use("/permisos", permisosRoutes);
 app.use("/comprobantes", comprobantesRoutes);
+app.use("/auditoria", auditoriaRoutes);
 
 
 app.use("/factura", facturaRoutes);
