@@ -7,7 +7,4 @@ router.get("/:id", rolesController.getRole);
 router.put("/:id", rolesController.updateRole);
 router.delete("/:id", rolesController.deleteRole);
 
-
-
-
 module.exports = router;
