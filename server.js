@@ -12,6 +12,7 @@ const permisosRoutes = require("./routes/permisos");
 const comprobantesRoutes = require("./routes/comprobantes");
 
 const facturaRoutes = require("./routes/facturaRoutes");
+const detalleDeVentaRoutes = require("./routes/detalleDeVentaRoutes");
 
 // Middleware
 app.use(express.json());
@@ -56,6 +57,8 @@ app.use("/comprobantes", comprobantesRoutes);
 
 
 app.use("/factura", facturaRoutes);
+
+app.use("/detalleDeVenta", detalleDeVentaRoutes);
 
 app.get("/ping", (req, res) => res.send("pong"));
 
