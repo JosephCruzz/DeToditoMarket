@@ -27,9 +27,9 @@ exports.addCai = async (req, res) => {
   const fechaAth = new Date(fecha_autorizacion);
   const fechaLimiteEm = new Date(fecha_limite_emision);
 
-  if (isNaN(fechaAth.getTime()) || isNaN(fechaLimiteEm)) {
+  if (isNaN(fechaAth.getTime()) || isNaN(fechaLimiteEm.getTime())) {
     return res.status(400).json({
-      message: "Porfavor ingresar una fecha válida YYYY-MM-DD, y real",
+      message: "Por favor ingresar una fecha válida YYYY-MM-DD, y real",
     });
   }
 
@@ -53,9 +53,9 @@ exports.addCai = async (req, res) => {
     res.status(201).json(addC);
   } catch (err) {
     if(err.name === "SequelizeUniqueConstraintError"){
-      res.status(409).json({
+      return res.status(409).json({
         message: "El campo codigo_cai es unique no puede repetirse."
-      })
+      });
     }
     res.status(500).json({
       message: "No se pudo crear Cai",
