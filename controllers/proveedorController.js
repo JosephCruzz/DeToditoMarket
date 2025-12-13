@@ -15,15 +15,17 @@ exports.addSupplier = async (request, response) => {
         const { 
             nombre,
             telefono,
-            direccion,
-            estado
+            direccion
         } = request.body;
+
+        if(!nombre||!telefono||!direccion){
+            return response.status(400).json({message: "Bad Request"});
+        }
 
         const newSupplier = await Proveedor.create({
             nombre,
             telefono,
-            direccion,
-            estado
+            direccion
         });
 
         response.json(newSupplier);
@@ -41,6 +43,10 @@ exports.editSupplier = async (request, response) => {
             direccion,
             estado
         } = request.body;
+
+        if(!id||!nombre||!telefono||!direccion||!estado){
+            return response.status(400).json({message: "Bad Request"});
+        }
 
         const supplierEdit = await Proveedor.findByPk(id);
         if(!supplierEdit){
@@ -63,6 +69,10 @@ exports.editSupplier = async (request, response) => {
 exports.deleteSupplier = async (request, response) => {
     try{
         const { id } = request.params;
+
+        if(!id){
+            return response.status(400).json({message: "Bad Request"});
+        }
 
         const supplierDelete = await Proveedor.findByPk(id);
         if(!supplierDelete){

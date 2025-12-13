@@ -13,23 +13,23 @@ exports.getInventory = async (request, response) => {
 exports.addToInventory = async (request, response) => {
     try{
         const { 
-            id,
             nombre,
             precio,
             stock,
             stock_minimo,
-            fecha_vencimiento,
-            precio_unitario
+            fecha_vencimiento
         } = request.body;
 
+        if(!nombre||!precio||!stock||!stock_minimo||!fecha_vencimiento){
+            return response.status(400).json({message: "Bad Request"});
+        }
+
         const newProduct = await Producto.create({
-            id,
             nombre,
             precio,
             stock,
             stock_minimo,
-            fecha_vencimiento,
-            precio_unitario
+            fecha_vencimiento
         });
 
         response.json(newProduct);
@@ -46,9 +46,12 @@ exports.editInventory = async (request, response) => {
             precio,
             stock,
             stock_minimo,
-            fecha_vencimiento,
-            precio_unitario
+            fecha_vencimiento
         } = request.body;
+
+        if(!id||!nombre||!precio||!stock||!stock_minimo||!fecha_vencimiento){
+            return response.status(400).json({message: "Bad Request"});
+        }
 
         const productEdit = await Producto.findByPk(id);
         if(!productEdit){
@@ -60,8 +63,7 @@ exports.editInventory = async (request, response) => {
             precio,
             stock,
             stock_minimo,
-            fecha_vencimiento,
-            precio_unitario
+            fecha_vencimiento
         });
 
         response.json({message: "Producto editado con exito."});
@@ -73,6 +75,10 @@ exports.editInventory = async (request, response) => {
 exports.deleteFromInventory = async (request, response) => {
     try{
         const { id } = request.params;
+
+        if(!id){
+            return response.status(400).json({message: "Bad Request"});
+        }
 
         const productDelete = await Producto.findByPk(id);
         if(!productDelete){

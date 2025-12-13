@@ -29,16 +29,16 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      descripcion: {
-        type: DataTypes.TEXT,
-        allowNull: true,
+      fecha: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW
       },
     },
     {
       sequelize,
       tableName: "auditoria",
       schema: "public",
-      timestamps: true,
+      timestamps: false,
       indexes: [
         {
           name: "auditoria_pkey",
