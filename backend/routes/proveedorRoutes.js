@@ -4,7 +4,7 @@ const proveedorController = require("../controllers/proveedorController");
 
 router.get("/getSuppliers", proveedorController.getSuppliers);
 router.post("/addSupplier", proveedorController.addSupplier);
-router.put("/addSupplier/:id", proveedorController.addSupplier);
+router.put("/editSupplier/:id", proveedorController.editSupplier);
 router.delete("/deleteSupplier/:id", proveedorController.deleteSupplier);
 
 module.exports = router;
