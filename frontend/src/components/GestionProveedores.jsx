@@ -7,7 +7,13 @@ const GestionProveedores = () => {
     const [formVisible, setFormVisible] = useState(false);
     const [add, setAdd] = useState(false);
     const [providers, setProviders] = useState([]);
-    const [providerToEdit, setProviderToEdit] = useState(null);
+    const [idProviderToEdit, setIdProviderToEdit] = useState(0);
+    const [newProvider, setNewProvider] = useState({
+        nombre: "",
+        telefono: "",
+        direccion: "",
+        estado: "activo"
+    });
 
     useEffect(() => {   
         axiosInstance.get('proveedor/getSuppliers')
@@ -23,17 +29,72 @@ const GestionProveedores = () => {
     const openFormAdd = () => {
         setFormVisible(true);
         setAdd(true);
+        setNewProvider({
+            nombre: "",
+            telefono: "",
+            direccion: "",
+            estado: "activo"
+        });
     }
 
     const openFormEdit = (provider) => {
         setFormVisible(true);
         setAdd(false);
-        setProviderToEdit(provider);
+        setIdProviderToEdit(provider.id);
+        setNewProvider({
+            nombre: provider.nombre,
+            telefono: provider.telefono,
+            direccion: provider.direccion,
+            estado: provider.estado
+        });
     }
 
     const closeForm = () => {
         setFormVisible(false);
     }
+
+    const handleChange = (event) =>{
+        setNewProvider({...newProvider, [event.target.name]: event.target.value});
+    }
+
+    const handleForm = async(event) => {
+        event.preventDefault();
+
+        try{
+            if(newProvider.nombre.trim()===""||newProvider.direccion.trim()===""||newProvider.telefono.trim()===""
+                ||newProvider.estado.trim()==="") return;
+            
+            if(add){
+                await axiosInstance.post(`proveedor/addSupplier`,{
+                    nombre: newProvider.nombre,
+                    telefono: newProvider.telefono,
+                    direccion: newProvider.direccion
+                });  
+            }else{
+                await axiosInstance.put(`proveedor/editSupplier/${idProviderToEdit}`,{
+                    nombre: newProvider.nombre,
+                    telefono: newProvider.telefono,
+                    direccion: newProvider.direccion,
+                    estado: newProvider.estado
+                });  
+            }
+            const response = await axiosInstance.get(`proveedor/getSuppliers`);
+            setProviders(response.data);
+            setFormVisible(false);
+        }catch(error){
+            console.log(error);
+        };
+    };
+
+    const deleteProvider = async(id) =>{
+        try{
+            await axiosInstance.delete(`proveedor/deleteSupplier/${id}`);
+            const response = await axiosInstance.get(`proveedor/getSuppliers`);
+            setProviders(response.data);
+        }catch(error){
+            console.log(error);
+        }
+    };
 
     const Icon = {
         Search: (props) => (
@@ -144,7 +205,7 @@ const GestionProveedores = () => {
                         </thead>
                         <tbody>
                             {providers.map((provider)=>(
-                                <tr>
+                                <tr key={provider.id}>
                                     <td className='table-body'>{provider.id}</td>
                                     <td className='table-body'>{provider.nombre}</td>
                                     <td className='table-body'>{provider.telefono}</td>
@@ -152,11 +213,9 @@ const GestionProveedores = () => {
                                     <td className='table-body'>{provider.estado}</td>
                                     <td className='table-body'>
                                         <div className='option-buttons'>
-                                            <button className='options-add-button' onClick={()=>openFormEdit()}>
-                                                <Icon.Add/></button>
-                                            <button className='options-edit-button'>
+                                            <button className='options-edit-button' onClick={()=>openFormEdit(provider)}>
                                                 <Icon.Edit/></button>
-                                            <button className='options-delete-button'>
+                                            <button className='options-delete-button' onClick={()=>deleteProvider(provider.id)}>
                                                 <Icon.Delete/></button>
                                         </div>
                                     </td>
@@ -173,14 +232,17 @@ const GestionProveedores = () => {
                         <div className='form-header'>
                              <h2>{add ? "Agregar Proveedor" : "Editar Proveedor"}</h2>
                         </div>
-                        <form>
+                        <form onSubmit={handleForm}>
                             <div className='form-row'>
                                 <div className='form-column-1'>
                                     <label>Nombre del Proveedor</label>
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Proveedor...' : providerToEdit.nombre}
+                                    placeholder={add ? 'Proveedor...' : newProvider.nombre}
+                                    name='nombre'
+                                    value={newProvider.nombre}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
@@ -188,7 +250,10 @@ const GestionProveedores = () => {
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Teléfono...' : providerToEdit.telefono}
+                                    placeholder={add ? 'Teléfono...' : newProvider.telefono}
+                                    name='telefono'
+                                    value={newProvider.telefono}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                             </div>
@@ -198,21 +263,27 @@ const GestionProveedores = () => {
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Dirección...' : providerToEdit.direccion}
+                                    placeholder={add ? 'Dirección...' : newProvider.direccion}
+                                    name='direccion'
+                                    value={newProvider.direccion}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
                                     <label>Estado</label>
-                                    <input
-                                    className='search-line'
-                                    type='text'
-                                    placeholder={add ? 'Estado...' : providerToEdit.estado}
-                                    ></input>
+                                    <select
+                                    name='estado'
+                                    value={newProvider.estado}
+                                    onChange={handleChange}
+                                    >
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
+                                    </select>
                                 </div>
                             </div>
                             <div className='form-buttons'>
-                                <button className='cancel-button' onClick={()=>closeForm()}>Cancelar</button>
-                                <button className='add-button'>Agregar</button>
+                                <button className='cancel-button' type='button' onClick={()=>closeForm()}>Cancelar</button>
+                                <button className='add-button' type='submit'>{add? "Agregar" : "Editar"}</button>
                             </div>
                         </form>
                     </div>
