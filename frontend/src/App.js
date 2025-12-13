@@ -5,6 +5,7 @@ import Header from './components/Header.jsx';
 import GestionProductos from './components/GestionProductos.jsx';
 import GestionUsuarios from './components/GestionUsuarios.jsx';
 import GestionProveedores from './components/GestionProveedores.jsx';
+import Auditoria from './components/Auditoria.jsx';
 
 function App() {
   
@@ -17,6 +18,7 @@ function App() {
           <Route path="/gestion/productos" element={<GestionProductos/>}/>
           <Route path="/gestion/usuarios" element={<GestionUsuarios/>}/>
           <Route path="/gestion/proveedores" element={<GestionProveedores/>}/>
+          <Route path="/reportes/auditoria" element={<Auditoria/>}/>
         </Routes>
       </Container>
     </Router>
