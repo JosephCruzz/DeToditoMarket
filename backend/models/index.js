@@ -37,6 +37,15 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
+//SALIA ERROR DE ASOCIACION
+db.factura.hasMany(db.DetalleVenta, { foreignKey: "factura_id", as: "detalle" });
+db.DetalleVenta.belongsTo(db.factura, { foreignKey: "factura_id", as: "factura" });
+
+db.DetalleVenta.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
+db.producto.hasMany(db.DetalleVenta, { foreignKey: "producto_id", as: "detalleVentas" });
+
+
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
