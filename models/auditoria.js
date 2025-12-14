@@ -29,14 +29,9 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      descripcion: {
-        type: DataTypes.TEXT,
-        allowNull: true,
-      },
-      created_at: {
+      fecha: {
         type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.Sequelize.fn("now"),
+        defaultValue: DataTypes.NOW
       },
     },
     {

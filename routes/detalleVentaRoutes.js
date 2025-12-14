@@ -1,8 +1,11 @@
 const express = require("express");
-const Routes = express.Router();
+const routes = express.Router();
 
-const detalleVentaC = require("../controllers/detalleVenta");
+const detalleDeVentaC = require("../controllers/detalleVentaController");
 
-Routes.post("/crear",detalleVentaC.addDetalleVenta);
+routes.post("/crear", detalleDeVentaC.addDetalleVenta);
+routes.get("/", detalleDeVentaC.getDetalleVenta);
+routes.put("/editar/:id", detalleDeVentaC.editDetalleVenta);
+routes.delete("/eliminar/:id", detalleDeVentaC.deleteDetalleVenta);
 
-module.exports = Routes;
+module.exports = routes;

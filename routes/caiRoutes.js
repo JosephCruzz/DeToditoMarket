@@ -1,4 +1,4 @@
-const controllersCai = require("../controllers/cai")
+const controllersCai = require("../controllers/caiController")
 
 const express = require("express");
 const Routes = express.Router();
