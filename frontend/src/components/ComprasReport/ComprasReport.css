@@ -1,0 +1,60 @@
+/* Header de reporte */
+.report-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.report-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: #222;
+}
+
+.add-btn {
+  background: #3da9e0;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.add-btn:hover {
+  background: #2f93c4;
+}
+
+/* Tarjeta y tabla */
+.table-card {
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.report-table th,
+.report-table td {
+  border: 1px solid #c7c7c7;
+  padding: 10px;
+  text-align: left;
+}
+
+.report-table th {
+  background: #f3f7fb;
+  font-weight: 700;
+}
+
+.report-table tr:nth-child(even) {
+  background: #fafafa;
+}
