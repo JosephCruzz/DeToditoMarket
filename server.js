@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const cors = require("cors");
 const app = express();
 var logger = require('morgan');
 var path = require('path');
@@ -16,31 +17,6 @@ const detalleCompraRoute = require("./routes/detalleCompraRoutes");
 const comprobanteRoute = require("./routes/comprobanteRoutes");
 const facturaRoute = require("./routes/facturaRoutes");
 const detalleVentaRoute = require("./routes/detalleVentaRoutes");
-
-// Swagger configuration
-const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
-    info: {
-      title: "DeToditoMarket API",
-      version: "0.0.1",
-      description: "Sistema de gestión de inventario y facturas para DeToditoMarket",
-      contact: {
-        name: "DeToditoMarket Team",
-        url: "https://github.com/JosephCruzz/DeToditoMarket"
-      }
-    },
-    servers: [
-      {
-        url: "http://localhost:3000",
-        description: "Servidor de desarrollo"
-      }
-    ]
-  },
-  apis: ["./routes/*.js"]
-};
-
-const swaggerDocs = swaggerJsdoc(swaggerOptions);
 const permisoRoute = require("./routes/permisoRoutes");
 const rolRoute = require("./routes/rolRoutes");
 
