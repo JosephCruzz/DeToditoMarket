@@ -1,4 +1,4 @@
-const { factura } = require("../models");
+const { factura, DetalleVenta, producto, cai: Cai } = require("../models");
 const validateFields = require("../utils/fieldChecks");
 
 // al cambiar cambiar variable date revisar endpoints
@@ -19,96 +19,143 @@ const arrFields = [
   { name: "subtotal", type: "number" },
   { name: "impuestos", type: "number" },
   { name: "total", type: "number" },
-  { name: "fecha_emision", type: "string" }, // or Date
+  { name: "fecha_emision", type: "string" },
   { name: "observaciones", type: "string" },
 ];
+
+
 exports.addFactura = async (req, res) => {
-  /*
-  const {
-    cai_id,
-    rtn_emisor,
-    nombre_emisor,
-    direccion_emisor,
-    telefono_emisor,
-    correo_emisor,
-    nombre_cliente,
-    rtn_cliente,
-    direccion_cliente,
-    telefono_cliente,
-    numero_factura,
-    metodo_pago,
-    moneda,
-    subtotal,
-    impuestos,
-    total,
-    fecha_emision,
-    observaciones,
-  } = req.body;*/
-
-  validateFields(arrFields, req.body, res);
-
-  const facturaesRepetida = await factura.findOne({
-    where: { numero_factura: req.body["numero_factura"] },
-  });
-
-  if (facturaesRepetida) {
-    return res.status(400).json({
-      status: "Error",
-      message: "El numero de factura tiene que ser único.",
-    });
-  }
-
-  const fechaE = new Date(req.body[arrFields[16].name]);
-
-  if (isNaN(fechaE.getTime())) {
-    return res.status(400).json({
-      status: "Error",
-      message: "El campo tiene que ser una fecha",
-    });
-  }
-
-  //addF es como decir addFactura es una abreviacion
   try {
-    const addF = await factura.create(req.body);
+
+    // ahora busca el ultimo numero del cai disponible
+    const caiDisponible = await Cai.findOne({
+      where: { estado: "activo" },
+      order: [["id", "ASC"]],
+    });
+
+    if (!caiDisponible) {
+      return res.status(400).json({
+        status: "Error",
+        message: "No hay CAI disponible para emitir la factura.",
+      });
+    }
+
+    // ahora busca el ultimo numero de factura con ese cai
+    const ultimaFactura = await factura.findOne({
+      where: { cai_id: caiDisponible.id },
+      order: [["id", "DESC"]],
+    });
+
+    let siguienteNumero;
+    if (!ultimaFactura) {
+      siguienteNumero = caiDisponible.rango_inicial;
+    } else {
+      const ultimo = parseInt(
+        ultimaFactura.numero_factura.split("-").pop()
+      );
+      siguienteNumero = String(ultimo + 1).padStart(6, "0");
+    }
+
+    const numeroFactura = `F-${caiDisponible.codigo_cai}-${siguienteNumero}`;
+
+    // validacion de fecha
+    const fechaE = new Date(req.body.fecha_emision);
+    if (isNaN(fechaE.getTime())) {
+      return res.status(400).json({
+        status: "Error",
+        message: "El campo fecha_emision tiene que ser una fecha válida",
+      });
+    }
+
+    //se edita para como se estan consiguiendo los datos del cai, numero de factura y cosas del emisor
+    const addF = await factura.create({
+      cai_id: caiDisponible.id,
+      numero_factura: numeroFactura,
+
+      // cosas que siempre seran la mismas (datos del emisor)
+      rtn_emisor: "000000000000",
+      nombre_emisor: "DeTodito Market",
+      direccion_emisor: "Yoro, Yoro",
+      telefono_emisor: "9999-9999",
+      correo_emisor: "test@detodito.com",
+
+      nombre_cliente: req.body.nombre_cliente,
+      rtn_cliente: req.body.rtn_cliente,
+
+      metodo_pago: req.body.metodo_pago,
+      subtotal: req.body.subtotal,
+      impuestos: req.body.impuestos || 0,
+      total: req.body.total,
+
+      fecha_emision: fechaE,
+      observaciones: req.body.observaciones || "",
+      estado: "VIGENTE",
+    });
+
+
     return res.status(201).json({
       status: "Success",
       message: addF,
     });
+
   } catch (err) {
+    console.error(err);
+
     if (err.name === "SequelizeForeignKeyConstraintError") {
       return res.status(409).json({
         status: "Error",
-        message: "El numero de Cai no es existente",
+        message: "El CAI no existe",
       });
     }
+
     return res.status(500).json({
       status: "Error",
       message: "Hubo un error creando la factura",
-      error: err.name,
+      error: err.message,
     });
   }
 };
 
+
+//SE EDITO PARA ACOMODAR LA ASOCIACION
 exports.getFactura = async (req, res) => {
   try {
-    const allFactura = await factura.findAll({
-      order: [["id", "ASC"]],
-    });
+const allFactura = await factura.findAll({
+  include: [
+    {
+      model: DetalleVenta,
+      as: "detalle",
+      include: [
+        {
+          model: producto,
+          as: "producto",
+          attributes: ["nombre"],
+        },
+      ],
+    },
+  ],
+  order: [["id", "ASC"]],
+});
 
-    if (allFactura.length === 0) {
+
+    if (!allFactura || allFactura.length === 0) {
       return res.status(404).json({
         status: "Error",
         message: "No se encontraron Facturas",
+        data: [],
       });
     }
+
     return res.status(200).json({
       status: "Success",
       message: allFactura,
     });
   } catch (err) {
+    console.error("Error fetching facturas:", err);
     return res.status(500).json({
       status: "Error",
-      message: err.message,
+      message: "Error al obtener Facturas",
+      error: err.message,
     });
   }
 };
@@ -119,14 +166,17 @@ exports.editFactura = async (req, res) => {
   try {
     validateFields(arrFields, req.body, res);
 
-    const fechEm = new Date(req.body[arrFields[16].name]);
+    const { fecha_emision } = req.body;
 
-    if (isNaN(fechEm.getTime())) {
+    const fechaE = new Date(fecha_emision);
+
+    if (!fecha_emision || isNaN(fechaE.getTime())) {
       return res.status(400).json({
         status: "Error",
-        message: "La fecha esta incorrecta tiene que ser formato YYYY-MM-DD",
+        message: "El campo fecha_emision tiene que ser una fecha válida (YYYY-MM-DD)",
       });
     }
+
 
     const findPk = await factura.findByPk(id);
 
