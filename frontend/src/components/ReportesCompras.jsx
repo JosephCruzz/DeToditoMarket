@@ -1,210 +1,307 @@
-import './ReportesCompras.css';
-import { useState, useEffect } from 'react';
-import axiosInstance from '../api/axiosInstance';
+import "./ReportesCompras.css";
+import { useEffect, useState } from "react";
+import axiosInstance from "../api/axiosInstance";
 
 const ReportesCompras = () => {
-    
-    const [formVisible, setFormVisible] = useState(false);
-    const [add, setAdd] = useState(false);
-    const [detalleCompra, setDetalleDeCompra] = useState(false);
-    const [proveedor, setProveedor] = useState(false);
-    const [user, setUser] = useState(false);
-    const [compras, setCompras] = useState([]);
+  const [compras, setCompras] = useState([]);
+  const [proveedores, setProveedores] = useState([]);
+  const [productosDisponibles, setProductosDisponibles] = useState([]);
 
-    {/*useEffect(() => {   
-        axiosInstance.get('user/getUsers')
-        .then(response => {
-            setCompras(response.data);
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error('There was an error!', error);
-        });     
-    }, []);*/}
+  // FILTROS
+  const [searchText, setSearchText] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("TODOS");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
 
-    const openFormAdd = () => {
-        setFormVisible(true);
-        setAdd(true);
+  // MODAL
+  const [showAgregarCompra, setShowAgregarCompra] = useState(false);
+  const [proveedorCompra, setProveedorCompra] = useState({
+    id: "",
+    nombre: "",
+    mostrarDropdown: false,
+  });
+  const [productosCompra, setProductosCompra] = useState([]);
+
+  useEffect(() => {
+    fetchCompras();
+    fetchProveedores();
+    fetchProductos();
+  }, []);
+
+  const fetchCompras = async () => {
+    try {
+      const res = await axiosInstance.get("/compra");
+      setCompras(res.data || []);
+    } catch (err) {
+      console.error("Error compras:", err);
     }
+  };
 
-    const closeForm = () => {
-        setFormVisible(false);
-        setAdd(false);
+  const fetchProveedores = async () => {
+    try {
+      const res = await axiosInstance.get("/proveedor/getSuppliers");
+      setProveedores(res.data || []);
+    } catch (err) {
+      console.error("Error proveedores:", err);
     }
+  };
 
-    const Icon = {
-        Search: (props) => (
-            <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            className={"w-4 h-4 " + (props.className || "")}
-            >
-            <path
-                d="M11 19a8 8 0 1 1 5.29-14.03A8 8 0 0 1 11 19Zm10 2-5.4-5.4"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-            </svg>
-        ),
-        Sort: ({ active, dir }) => (
-            <svg
-            viewBox="0 0 24 24"
-            className={"w-4 h-4 " + (active ? "text-white" : "text-white/70")}
-            >
-            <path
-                d="M12 6l3 3H9l3-3z"
-                fill="currentColor"
-                opacity={dir === "asc" ? 1 : 0.35}
-            />
-            <path
-                d="M12 18l-3-3h6l-3 3z"
-                fill="currentColor"
-                opacity={dir === "desc" ? 1 : 0.35}
-            />
-            </svg>
-        ),
-        Add: (props) => (
-            <svg viewBox="0 0 24 24" className={"w-5 h-5 " + (props.className || "")}>
-            <path
-                d="M12 5v14M5 12h14"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-            />
-            </svg>
-        ),
-        Edit: (props) => (
-            <svg viewBox="0 0 24 24" className={"w-5 h-5 " + (props.className || "")}>
-            <path
-                d="M4 20h4l10-10-4-4L4 16v4zM14 6l4 4"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-            />
-            </svg>
-        ),
-        Delete: (props) => (
-            <svg viewBox="0 0 24 24" className={"w-5 h-5 " + (props.className || "")}>
-            <path
-                d="M6 7h12M9 7V5h6v2m-8 0 1 12h8l1-12"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-            />
-            </svg>
-        ),
-        ChevronLeft: (props) => (
-            <svg viewBox="0 0 24 24" className={"w-6 h-6 " + (props.className || "")}>
-            <path
-                d="M15 6l-6 6 6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-            />
-            </svg>
-        ),
-        ChevronRight: (props) => (
-            <svg viewBox="0 0 24 24" className={"w-6 h-6 " + (props.className || "")}>
-            <path
-                d="M9 6l6 6-6 6"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                fill="none"
-            />
-            </svg>
-        ),
+  const fetchProductos = async () => {
+    try {
+      const res = await axiosInstance.get("/producto/getInventory");
+      setProductosDisponibles(res.data || []);
+    } catch (err) {
+      console.error("Error productos:", err);
+    }
+  };
+
+  const comprasFiltradas = compras.filter((c) => {
+    const fecha = new Date(c.fecha_creacion);
+
+    const matchText =
+      c.id.toString().includes(searchText) ||
+      c.proveedor?.nombre?.toLowerCase().includes(searchText.toLowerCase());
+
+    const matchEstado = filtroEstado === "TODOS" || c.estado === filtroEstado;
+    const matchFechaInicio = !fechaInicio || fecha >= new Date(fechaInicio);
+    const matchFechaFin = !fechaFin || fecha <= new Date(fechaFin);
+
+    return matchText && matchEstado && matchFechaInicio && matchFechaFin;
+  });
+
+  const abrirModal = () => {
+    setShowAgregarCompra(true);
+    setProveedorCompra({ id: "", nombre: "", mostrarDropdown: false });
+    setProductosCompra([]);
+  };
+
+  const cerrarModal = () => setShowAgregarCompra(false);
+
+  const resetearFiltros = () => {
+    setSearchText("");
+    setFiltroEstado("TODOS");
+    setFechaInicio("");
+    setFechaFin("");
+  };
+
+  const agregarProducto = () => {
+    setProductosCompra([
+      ...productosCompra,
+      { productoId: "", nombreProducto: "", cantidad: 1, precioUnitario: 0, mostrarDropdown: false },
+    ]);
+  };
+
+  const seleccionarProducto = (idx, prod) => {
+    const copia = [...productosCompra];
+    copia[idx] = {
+      ...copia[idx],
+      productoId: prod.id,
+      nombreProducto: prod.nombre,
+      precioUnitario: Number(prod.precio) || 0,
+      mostrarDropdown: false,
     };
+    setProductosCompra(copia);
+  };
 
-    return(
-        <div className='gestion-container'>
-            <div className='title-header'>
-                <h1>Reportes de Compras</h1>
-                <button onClick={()=>openFormAdd()}>+ Agregar Compra</button>
-            </div>
-            <div className='table-container'>
-                <div className='body-scroll'>
-                    <table className='table-productos'>
-                        <thead>
-                            <tr>
-                                <th>ID de Compra</th>
-                                <th>Proveedor</th>
-                                <th>Usuario Responsable</th>
-                                <th>Fecha de Compra</th>
-                                <th>Estado</th>
-                                <th>Opciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {compras.map((compra)=>(
-                                <tr>
-                                    <td className='table-body'>{compra.id}</td>
-                                    <td className='table-body'>{compra.proveedor_id}</td>
-                                    <td className='table-body'>{compra.user_id}</td>
-                                    <td className='table-body'>{compra.fecha}</td>
-                                    <td className='table-body'>{compra.estado }</td>
-                                    <td className='table-body'>
-                                        <div className='option-buttons'>
-                                            <button className='options-delete-button'>
-                                                <Icon.Delete/></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            {/*FORM PARA AGREGAR*/}
-            {formVisible &&(
-                <div className='modal-overlay'>
-                    <div className='add-form'>
-                        <div className='form-header'>
-                            <h2>Agregar Compra</h2>
-                        </div>
-                        <form>
-                            <div className='form-row'>
-                                <div className='form-column-1'>
-                                    <label>Proveedor</label>
-                                    <input
-                                    className='search-line'
-                                    type='text'
-                                    placeholder='Proveedor...'
-                                    ></input>
-                                </div>
-                                <div className='form-column-2'>
-                                    <label>Usuario Responsable</label>
-                                    <input
-                                    className='search-line'
-                                    type='text'
-                                    placeholder='Usuario...'
-                                    ></input>
-                                </div>
-                            </div>
-                            <div className='form-row'>
-                                <div className='form-column-1'>
-                                    <label>Fecha de Compra</label>
-                                    <input
-                                    className='search-line'
-                                    type='Date'
-                                    placeholder='Fecha...'
-                                    ></input>
-                                </div>
-                            </div>
-                            <div className='form-buttons'>
-                                <button className='cancel-button' onClick={()=>closeForm()}>Cancelar</button>
-                                <button className='add-button'>Agregar</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            )}
+  const actualizarProducto = (idx, field, value) => {
+    const copia = [...productosCompra];
+    copia[idx][field] =
+      field === "cantidad" || field === "precioUnitario" ? Number(value) : value;
+    setProductosCompra(copia);
+  };
+
+  const eliminarProducto = (idx) => {
+    setProductosCompra(productosCompra.filter((_, i) => i !== idx));
+  };
+
+  const seleccionarProveedor = (p) => {
+    setProveedorCompra({ id: p.id, nombre: p.nombre, mostrarDropdown: false });
+  };
+
+  const totalCompra = productosCompra.reduce(
+    (acc, p) => acc + p.cantidad * p.precioUnitario,
+    0
+  );
+
+  const guardarCompra = async () => {
+    if (!proveedorCompra.id || productosCompra.length === 0) {
+      alert("Seleccione proveedor y productos");
+      return;
+    }
+
+    try {
+      const compraRes = await axiosInstance.post("/compras", {
+        proveedor_id: proveedorCompra.id,
+        user_id: 1,
+      });
+      const compra = compraRes.data;
+
+      await axiosInstance.post(
+        "/detalleCompra/bulk",
+        productosCompra.map((p) => ({
+          compra_id: compra.id,
+          producto_id: p.productoId,
+          cantidad: p.cantidad,
+          precio_unitario: p.precioUnitario,
+        }))
+      );
+
+      cerrarModal();
+      fetchCompras();
+    } catch (err) {
+      console.error("Error guardar compra:", err);
+    }
+  };
+
+  return (
+    <div className="reportes-outer">
+      <div className="reportes-card">
+        <h1 className="reportes-title">Reporte de Compras</h1>
+
+        {/* FILTROS + SEARCH + AGREGAR COMPRA */}
+        <div className="filter-bar real-filters">
+          <div className="filter-group">
+            <label>Desde:</label>
+            <input
+              type="date"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+              className="input-fecha"
+            />
+          </div>
+          <div className="filter-group">
+            <label>Hasta:</label>
+            <input
+              type="date"
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
+              className="input-fecha"
+            />
+          </div>
+          <div className="filter-group">
+            <label>Estado:</label>
+            <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+              <option value="TODOS">Todos</option>
+              <option value="activo">Activo</option>
+              <option value="pendiente">Pendiente</option>
+            </select>
+          </div>
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar proveedor o ID"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+          <button className="btn-gray" onClick={resetearFiltros}>
+            Resetear filtros
+          </button>
+          <button className="btn-add-venta" onClick={abrirModal}>
+            + Agregar Compra
+          </button>
         </div>
-    )
-}
+
+        {/* TABLA */}
+        <div className="tabla-wrapper">
+          <table className="ventas-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Proveedor</th>
+                <th>Fecha</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comprasFiltradas.map((c) => (
+                <tr key={c.id}>
+                  <td>{c.id}</td>
+                  <td>{c.proveedor?.nombre}</td>
+                  <td>{new Date(c.fecha_creacion).toLocaleDateString()}</td>
+                  <td>L.{c.detalle?.reduce((a, d) => a + d.cantidad * d.precio_unitario, 0) || 0}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* MODAL AGREGAR COMPRA */}
+        {showAgregarCompra && (
+          <div className="modal-overlay">
+            <div className="modal-content">
+              <h2>Nueva Compra</h2>
+
+              {/* PROVEEDOR */}
+              <div className="form-group" style={{ position: "relative" }}>
+                <label>Proveedor</label>
+                <input
+                  placeholder="Buscar proveedor..."
+                  value={proveedorCompra.nombre}
+                  onChange={(e) =>
+                    setProveedorCompra({ ...proveedorCompra, nombre: e.target.value, mostrarDropdown: true })
+                  }
+                  onFocus={() =>
+                    setProveedorCompra({ ...proveedorCompra, mostrarDropdown: true })
+                  }
+                />
+                {proveedorCompra.mostrarDropdown && (
+                  <div className="lista-dropdown">
+                    {proveedores
+                      .filter((p) => p.nombre.toLowerCase().includes(proveedorCompra.nombre.toLowerCase()))
+                      .slice(0, 5)
+                      .map((p) => (
+                        <div key={p.id} className="item-dropdown" onClick={() => seleccionarProveedor(p)}>
+                          {p.nombre} (ID: {p.id})
+                        </div>
+                      ))}
+                  </div>
+                )}
+              </div>
+
+              {/* PRODUCTOS */}
+              {productosCompra.map((p, idx) => (
+                <div key={idx} className="producto-row">
+                  <input
+                    value={p.nombreProducto}
+                    placeholder="Buscar producto..."
+                    onChange={(e) => {
+                      actualizarProducto(idx, "nombreProducto", e.target.value);
+                      const copia = [...productosCompra];
+                      copia[idx].mostrarDropdown = true;
+                      setProductosCompra(copia);
+                    }}
+                  />
+                  {p.mostrarDropdown && (
+                    <div className="lista-dropdown">
+                      {productosDisponibles
+                        .filter((prod) => prod.nombre.toLowerCase().includes(p.nombreProducto.toLowerCase()))
+                        .slice(0, 5)
+                        .map((prod) => (
+                          <div key={prod.id} className="item-dropdown" onClick={() => seleccionarProducto(idx, prod)}>
+                            {prod.nombre} (Stock: {prod.stock ?? 0}) - L.{prod.precio ?? "0.00"}
+                          </div>
+                        ))}
+                    </div>
+                  )}
+                  <input type="number" value={p.cantidad} onChange={(e) => actualizarProducto(idx, "cantidad", e.target.value)} />
+                  <input type="number" value={p.precioUnitario} onChange={(e) => actualizarProducto(idx, "precioUnitario", e.target.value)} />
+                  <button onClick={() => eliminarProducto(idx)}>X</button>
+                </div>
+              ))}
+
+              <button onClick={agregarProducto}>+ Producto</button>
+              <div className="total-venta">Total: L.{totalCompra.toFixed(2)}</div>
+
+              <div className="modal-actions">
+                <button className="btn-cancel" onClick={cerrarModal}>Cancelar</button>
+                <button className="btn-guardar" onClick={guardarCompra}>Guardar Compra</button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default ReportesCompras;
