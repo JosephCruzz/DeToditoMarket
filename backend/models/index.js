@@ -44,6 +44,10 @@ db.DetalleVenta.belongsTo(db.factura, { foreignKey: "factura_id", as: "factura" 
 db.DetalleVenta.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
 db.producto.hasMany(db.DetalleVenta, { foreignKey: "producto_id", as: "detalleVentas" });
 
+db.compras.belongsTo(db.proveedores, { foreignKey: "proveedor_id", as: "proveedor" });
+db.compras.belongsTo(db.users, { foreignKey: "user_id", as: "user" });
+
+
 
 
 db.sequelize = sequelize;
