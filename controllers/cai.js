@@ -64,6 +64,7 @@ exports.addCai = async (req, res) => {
   }
 
 };
+<<<<<<< HEAD
 exports.editCai = async (req,res) => {
  try{
    const {id} = req.params;
@@ -152,3 +153,30 @@ exports.getCai = async (req, res) => {
   }
 };
 
+=======
+
+exports.deleteCai = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const caiRecord = await cai.findByPk(id);
+
+    if (!caiRecord) {
+      return res.status(404).json({
+        message: "CAI no encontrado"
+      });
+    }
+
+    await caiRecord.destroy();
+
+    res.status(200).json({
+      message: "CAI eliminado exitosamente"
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: "No se pudo eliminar el CAI",
+      Error: err.message
+    });
+  }
+};
+>>>>>>> cc431c33 (DeleteCais)
