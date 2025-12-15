@@ -37,15 +37,6 @@ function ComprasReport() {
     const proveedorId = compra.proveedor_id ?? "—";
     const usuarioNombre = compra.user?.nombre_completo ?? compra.user?.username ?? "—";
     const usuarioId = compra.user_id ?? "—";
-    const fecha = compra.fecha
-      ? new Date(compra.fecha).toLocaleString('es-HN', {
-          year: 'numeric',
-          month: '2-digit',
-          day: '2-digit',
-          hour: '2-digit',
-          minute: '2-digit'
-        })
-      : "—";
     const fechaCreacion = compra.fecha_creacion
       ? new Date(compra.fecha_creacion).toLocaleString('es-HN', {
           year: 'numeric',
@@ -72,7 +63,6 @@ function ComprasReport() {
         <td>{proveedorNombre}</td>
         <td>{usuarioId}</td>
         <td>{usuarioNombre}</td>
-        <td>{fecha}</td>
         <td>{fechaCreacion}</td>
         <td>{fechaActualizacion}</td>
         <td>{compra.estado ?? "—"}</td>
@@ -101,7 +91,6 @@ function ComprasReport() {
                   <th>Nombre del Proveedor</th>
                   <th>ID Usuario</th>
                   <th>Usuario Responsable</th>
-                  <th>Fecha</th>
                   <th>Fecha de Creación</th>
                   <th>Fecha de Actualización</th>
                   <th>Estado</th>
@@ -112,7 +101,7 @@ function ComprasReport() {
                   rows
                 ) : (
                   <tr>
-                    <td colSpan="9">No hay compras registradas.</td>
+                    <td colSpan="8">No hay compras registradas.</td>
                   </tr>
                 )}
               </tbody>

@@ -1,3 +1,14 @@
 node_modules
 .gitconfig
 .idea
+
+# Env files (no versionar secretos)
+.env
+backend/.env
+frontend/.env
+frontend/.env.local
+
+# Logs
+logs
+*.log
+npm-debug.log*

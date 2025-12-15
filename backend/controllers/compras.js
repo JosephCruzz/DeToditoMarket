@@ -1,4 +1,7 @@
-const { compras, sequelize } = require("../models");
+const db = require("../models");
+const initModels = require("../models/init-models");
+const models = initModels(db.sequelize);
+const compras = models.compras;
 
 exports.addCompra = async (req, res) => {
   try {
@@ -33,9 +36,21 @@ exports.addCompra = async (req, res) => {
 
 //todas las compras
 exports.getCompra = async (req,res) => {
-  
+
   try {
     const allCompras = await compras.findAll({
+      include: [
+        {
+          model: models.proveedores,
+          as: "proveedor",
+          attributes: ["id", "nombre"]
+        },
+        {
+          model: models.users,
+          as: "user",
+          attributes: ["id", "username", "nombre_completo"]
+        }
+      ],
       order: [["fecha_creacion","ASC"]] //orden debido a creacion de menor a mayor
     });
     if(allCompras.length === 0){
