@@ -50,4 +50,45 @@ exports.getCompra = async (req,res) => {
       error: err.message
     })
   }
+
 }
+
+// Editar compra - solo cambia el estado a "anulado"
+exports.editCompra = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { estado } = req.body;
+
+    if (!id) {
+      return res.status(400).json({
+        message: "El ID de la compra es obligatorio",
+      });
+    }
+
+    if (!estado || estado !== "anulado") {
+      return res.status(400).json({
+        message: "Solo se permite cambiar el estado a 'anulado'",
+      });
+    }
+
+    const compra = await compras.findByPk(id);
+
+    if (!compra) {
+      return res.status(404).json({
+        message: "Compra no encontrada",
+      });
+    }
+
+    await compra.update({ estado: "anulado" });
+
+    return res.status(200).json({
+      message: "Compra anulada exitosamente",
+      compra,
+    });
+  } catch (err) {
+    return res.status(500).json({
+      message: "Error al actualizar la compra",
+      error: err.message,
+    });
+  }
+};

@@ -17,10 +17,6 @@ module.exports = function (sequelize, DataTypes) {
           key: "id",
         },
       },
-      fecha: {
-        type: DataTypes.DATE,
-        allowNull: true,
-      },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
