@@ -1,13 +1,23 @@
 import './GestionUsuarios.css';
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
+import Password from 'antd/es/input/Password';
 
 const GestionUsuarios = () => {
     
     const [formVisible, setFormVisible] = useState(false);
     const [add, setAdd] = useState(false);
     const [users, setUsers] = useState([]);
-    const [userToEdit, setUserToEdit] = useState(null);
+    const [idUserToEdit, setIdUserToEdit] = useState(null);
+    const [newUser, setNewUser] = useState({
+        username: "",
+        password: "",  
+        nombre: "",  
+        apellido: "",    
+        rol_id: "",
+        estado: "activo"
+    });
+
 
     useEffect(() => {   
         axiosInstance.get('user/getUsers')
@@ -23,19 +33,83 @@ const GestionUsuarios = () => {
     const openFormAdd = () => {
         setFormVisible(true);
         setAdd(true);
-        setUserToEdit(null);
+        setNewUser({
+            username: "",
+            password: "",  
+            nombre: "",  
+            apellido: "",    
+            rol_id: "",
+            estado: "activo"
+        });
     }
 
     const openFormEdit = (user) => {
         setFormVisible(true);
         setAdd(false);
-        setUserToEdit(user);
+        setIdUserToEdit(user.id);
+        const partes_nombre=user.nombre_completo.trim().split(" ");
+        const n=partes_nombre.shift();
+        const a=partes_nombre.join(" ");;
+        setNewUser({
+            username: user.username,
+            password: "",
+            nombre: n,    
+            apellido: a,
+            rol_id: user.rol_id,
+            estado: user.estado
+        });
     }
 
     const closeForm = () => {
         setFormVisible(false);
         setAdd(false);
     }
+
+    const handleChange = (event) =>{
+        setNewUser({...newUser, [event.target.name]: event.target.value});
+    }
+
+    const handleForm = async(event) => {
+        event.preventDefault();
+
+        try{
+            if(newUser.username.trim()===""||newUser.nombre.trim()===""||newUser.apellido.trim()===""||
+            Number(newUser.rol_id)<=0||newUser.estado.trim()==="") return;
+            const nombre_completo=`${newUser.nombre} ${newUser.apellido}`;
+            if(add){
+                if(newUser.password.trim()==="") return;
+                await axiosInstance.post(`user/addUser`,{
+                    username: newUser.username,
+                    password: newUser.password,
+                    nombre_completo: nombre_completo,
+                    rol_id: Number(newUser.rol_id),
+                    estado: newUser.estado
+                });  
+            }else{
+                await axiosInstance.put(`user/editUser/${idUserToEdit}`,{
+                    username: newUser.username,
+                    nombre_completo: nombre_completo,
+                    rol_id: Number(newUser.rol_id),
+                    estado: newUser.estado
+                });  
+            }
+            const response = await axiosInstance.get(`user/getUsers`);
+            setUsers(response.data);
+            setFormVisible(false);
+        }catch(error){
+            console.log(error);
+        };
+    };
+
+    const deleteUser = async(id) =>{
+        try{
+            await axiosInstance.delete(`user/deleteUser/${id}`);
+            const response = await axiosInstance.get(`user/getUsers`);
+            setUsers(response.data);
+        }catch(error){
+            console.log(error);
+        }
+    };
 
     const Icon = {
         Search: (props) => (
@@ -147,7 +221,7 @@ const GestionUsuarios = () => {
                         </thead>
                         <tbody>
                             {users.map((user)=>(
-                                <tr>
+                                <tr key={user.id}>
                                     <td className='table-body'>{user.id}</td>
                                     <td className='table-body'>{user.username}</td>
                                     <td className='table-body'>{user.nombre_completo}</td>
@@ -156,11 +230,9 @@ const GestionUsuarios = () => {
                                     <td className='table-body'>{user.estado}</td>
                                     <td className='table-body'>
                                         <div className='option-buttons'>
-                                            <button className='options-add-button' onClick={()=>openFormEdit()}>
-                                                <Icon.Add/></button>
-                                            <button className='options-edit-button'>
+                                            <button className='options-edit-button' onClick={()=>openFormEdit(user)}>
                                                 <Icon.Edit/></button>
-                                            <button className='options-delete-button'>
+                                            <button className='options-delete-button' onClick={()=>deleteUser(user.id)}>
                                                 <Icon.Delete/></button>
                                         </div>
                                     </td>
@@ -177,14 +249,17 @@ const GestionUsuarios = () => {
                         <div className='form-header'>
                             <h2>{add ? "Agregar Usuario" : "Editar Usuario"}</h2>
                         </div>
-                        <form>
+                        <form onSubmit={handleForm}>
                             <div className='form-row'>
                                 <div className='form-column-1'>
                                     <label>Nombre</label>
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Nombre...' : userToEdit.nombre_completo.split(" ")[0]}
+                                    placeholder={add ? 'Nombre...' : newUser.nombre}
+                                    name='nombre'
+                                    value={newUser.nombre}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
@@ -192,7 +267,10 @@ const GestionUsuarios = () => {
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Apellido...' : userToEdit.nombre_completo.split(" ")[1]}
+                                    placeholder={add ? 'Apellido...' : newUser.apellido}
+                                    name='apellido'
+                                    value={newUser.apellido}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                             </div>
@@ -202,36 +280,51 @@ const GestionUsuarios = () => {
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'usuario123...' : userToEdit.username}
+                                    placeholder={add ? 'usuario123...' : newUser.username}
+                                    name='username'
+                                    value={newUser.username}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
-                                    <label>Contraseña</label>
-                                    <input
-                                    className='search-line'
-                                    type='text'
-                                    placeholder='***'
-                                    ></input>
+                                    <label>Rol</label>
+                                    <select
+                                    name='rol_id'
+                                    value={newUser.rol_id}
+                                    onChange={handleChange}
+                                    >
+                                        <option value={1}>Administrador</option>
+                                        <option value={2}>Empleado</option>
+                                    </select>
                                 </div>
                             </div>
                             <div className='form-row'>
-                                <div className='form-column-1'>
-                                    <label>Rol</label>
-                                    <select>
-                                        <option value="admin">Administrador</option>
-                                    </select>
-                                </div>
-                                <div className='form-column-2'>
+                                {add &&(<div className='form-column-1'>
+                                    <label>Contraseña</label>
+                                        <input
+                                        className='search-line'
+                                        type='text'
+                                        placeholder='***'
+                                        name='password'
+                                        value={newUser.password}
+                                        onChange={handleChange}
+                                    ></input>
+                                </div>)}
+                                <div className={add? 'form-column-2' :'form-column-1'}>
                                     <label>Estado</label>
-                                    <select>
-                                        <option value="Activo">Activo</option>
-                                        <option value="Inactivo">Inactivo</option>
+                                    <select
+                                    name='estado'
+                                    value={newUser.estado}
+                                    onChange={handleChange}
+                                    >
+                                        <option value="activo">Activo</option>
+                                        <option value="inactivo">Inactivo</option>
                                     </select>
                                 </div>
                             </div>
                             <div className='form-buttons'>
-                                <button className='cancel-button' onClick={()=>closeForm()}>Cancelar</button>
-                                <button className='add-button'>Agregar</button>
+                                <button className='cancel-button' type='button' onClick={()=>closeForm()}>Cancelar</button>
+                                <button className='add-button' type='submit'>{add? "Agregar" : "Editar"}</button>
                             </div>
                         </form>
                     </div>

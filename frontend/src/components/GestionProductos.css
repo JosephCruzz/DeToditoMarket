@@ -84,9 +84,10 @@
     z-index: 1000;
 }
 .add-form{
-    height: 550px;
+    height: 450px;
     width: 580px;
     background: #ffff;
+    border-radius: 10px;
 }
 .form-header{
     display: flex;
@@ -96,6 +97,8 @@
     height: 60px;
     background: #2E9FD4;
     color: #ffff;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
 }
 .form-header h2{
     font-size: 25px;
@@ -139,6 +142,20 @@
     height: 40px;
     background: #2a4eec;
     color: #ffff;
+}
+.add-button:hover{
+    background: #5772eb;
+}
+.add-button:active{
+    transform: scale(0.95);
+    background: #2a4eec;
+}
+.cancel-button:hover{
+    background: #eb4848;
+}
+.cancel-button:active{
+    transform: scale(0.95);
+    background: #ec2a2a;
 }
 
 .options-add-button{ 

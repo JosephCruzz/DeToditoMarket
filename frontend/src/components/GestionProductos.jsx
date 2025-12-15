@@ -7,7 +7,14 @@ const GestionProductos = () => {
     const [formVisible, setFormVisible] = useState(false);
     const [add, setAdd] = useState(false);
     const [products, setProducts] = useState([]);
-    const [productToEdit, setProductToEdit] = useState([]);
+    const [idProductToEdit, setIDProductToEdit] = useState(0);
+    const [newProduct, setNewProduct] = useState({
+      nombre: "",
+      precio: "",
+      stock: "",
+      stock_minimo: "",
+      fecha_vencimiento: ""
+    });
 
     useEffect(() => {   
         axiosInstance.get(`producto/getInventory`)
@@ -23,17 +30,86 @@ const GestionProductos = () => {
     const openFormAdd = () => {
         setFormVisible(true);
         setAdd(true);
+        setNewProduct({
+            nombre: "",
+            precio: "",
+            stock: "",
+            stock_minimo: "",
+            fecha_vencimiento: ""
+        });
     }
 
     const openFormEdit = (product) => {
         setFormVisible(true);
         setAdd(false);
-        setProductToEdit(product);
+        setIDProductToEdit(product.id);
+        setNewProduct({
+            nombre: product.nombre,
+            precio: product.precio,
+            stock: product.stock,
+            stock_minimo: product.stock_minimo,
+            fecha_vencimiento: product.fecha_vencimiento
+        });
     }
 
     const closeForm = () => {
         setFormVisible(false);
     }
+
+    const handleChange = (event) =>{
+        setNewProduct({...newProduct, [event.target.name]: event.target.value});
+    }
+
+    const handleForm = async(event) => {
+        event.preventDefault();
+
+        try{
+            if(newProduct.nombre.trim()===""||Number(newProduct.precio)<=0||Number(newProduct.stock)<=0||
+                Number(newProduct.stock_minimo)<=0||newProduct.fecha_vencimiento==="") return;
+            
+            if(add){
+                await axiosInstance.post(`producto/addToInventory`,{
+                    nombre: newProduct.nombre,
+                    precio: Number(newProduct.precio),
+                    stock: Number(newProduct.stock),
+                    stock_minimo: Number(newProduct.stock_minimo),
+                    fecha_vencimiento: newProduct.fecha_vencimiento
+                });  
+            }else{
+                await axiosInstance.put(`producto/editInventory/${idProductToEdit}`,{
+                    nombre: newProduct.nombre,
+                    precio: Number(newProduct.precio),
+                    stock: Number(newProduct.stock),
+                    stock_minimo: Number(newProduct.stock_minimo),
+                    fecha_vencimiento: newProduct.fecha_vencimiento
+                });  
+            }
+            const response = await axiosInstance.get(`producto/getInventory`);
+            setProducts(response.data);
+            setFormVisible(false);
+        }catch(error){
+            console.log(error);
+        };
+    };
+
+    const deleteProduct = async(id) =>{
+        try{
+            await axiosInstance.delete(`producto/deleteFromInventory/${id}`);
+            const response = await axiosInstance.get(`producto/getInventory`);
+            setProducts(response.data);
+        }catch(error){
+            console.log(error);
+        }
+    };
+
+    const formatDateForInput = (isoDate) => {
+        if (!isoDate) return "";
+        const date = new Date(isoDate);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
 
     const Icon = {
         Search: (props) => (
@@ -152,11 +228,9 @@ const GestionProductos = () => {
                                     <td className='table-body'>{product.precio}</td>
                                     <td className='table-body'>
                                         <div className='option-buttons'>
-                                            <button className='options-add-button' onClick={()=>openFormEdit()}>
-                                                <Icon.Add/></button>
-                                            <button className='options-edit-button'>
+                                            <button className='options-edit-button' onClick={()=>openFormEdit(product)}>
                                                 <Icon.Edit/></button>
-                                            <button className='options-delete-button'>
+                                            <button className='options-delete-button' onClick={()=>deleteProduct(product.id)}>
                                                 <Icon.Delete/></button>
                                         </div>
                                     </td>
@@ -173,22 +247,28 @@ const GestionProductos = () => {
                         <div className='form-header'>
                             <h2>{add ? "Agregar Producto" : "Editar Producto"}</h2>
                         </div>
-                        <form>
+                        <form onSubmit={handleForm}>
                             <div className='form-row'>
                                 <div className='form-column-1'>
                                     <label>Nombre del Producto</label>
                                     <input
                                     className='search-line'
                                     type='text'
-                                    placeholder={add ? 'Producto...' : productToEdit.nombre}
+                                    placeholder={add ? 'Producto...' : newProduct.nombre}
+                                    name='nombre'
+                                    value={newProduct.nombre}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
                                     <label>Precio Venta</label>
                                     <input
                                     className='search-line'
-                                    type='text'
-                                    placeholder={add ? 'Precio...' : productToEdit.precio}
+                                    type='number'
+                                    placeholder={add ? 0 : newProduct.precio}
+                                    name='precio'
+                                    value={newProduct.precio}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                             </div>
@@ -198,15 +278,21 @@ const GestionProductos = () => {
                                     <input
                                     className='search-line'
                                     type='number'
-                                    placeholder={add ? 'Stock...' : productToEdit.stock}
+                                    placeholder={add ? 0 : newProduct.stock}
+                                    name='stock'
+                                    value={newProduct.stock}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                                 <div className='form-column-2'>
                                     <label>Stock minimo</label>
                                     <input
                                     className='search-line'
-                                    type='text'
-                                    placeholder={add ? 'Stock minimo...' : productToEdit.stock_minimo}
+                                    type='number'
+                                    placeholder={add ? 0 : newProduct.stock_minimo}
+                                    name='stock_minimo'
+                                    value={newProduct.stock_minimo}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                             </div>
@@ -216,13 +302,15 @@ const GestionProductos = () => {
                                     <input
                                     className='search-line'
                                     type='date'
-                                    placeholder={add ? 'Fecha...' : productToEdit.fecha_vencimiento}
+                                    name='fecha_vencimiento'
+                                    value={add? newProduct.fecha_vencimiento : formatDateForInput(newProduct.fecha_vencimiento)}
+                                    onChange={handleChange}
                                     ></input>
                                 </div>
                             </div>
                             <div className='form-buttons'>
-                                <button className='cancel-button' onClick={()=>closeForm()}>Cancelar</button>
-                                <button className='add-button'>Agregar</button>
+                                <button className='cancel-button' type='button' onClick={()=>closeForm()}>Cancelar</button>
+                                <button className='add-button' type='submit'>{add? "Agregar" : "Editar"}</button>
                             </div>
                         </form>
                     </div>
