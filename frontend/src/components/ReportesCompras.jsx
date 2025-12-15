@@ -15,13 +15,14 @@ const ReportesCompras = () => {
 
   // MODAL
   const [showAgregarCompra, setShowAgregarCompra] = useState(false);
-  const [proveedorCompra, setProveedorCompra] = useState({
-    id: "",
-    nombre: "",
-    mostrarDropdown: false,
-  });
+  const [proveedorCompra, setProveedorCompra] = useState({ id: "", nombre: "", mostrarDropdown: false });
   const [productosCompra, setProductosCompra] = useState([]);
 
+  const [showDetalleModal, setShowDetalleModal] = useState(false);
+  const [selectedCompra, setSelectedCompra] = useState(null); 
+
+
+  // FETCH
   useEffect(() => {
     fetchCompras();
     fetchProveedores();
@@ -30,7 +31,7 @@ const ReportesCompras = () => {
 
   const fetchCompras = async () => {
     try {
-      const res = await axiosInstance.get("/compra");
+      const res = await axiosInstance.get("/compra/");
       setCompras(res.data || []);
     } catch (err) {
       console.error("Error compras:", err);
@@ -55,27 +56,26 @@ const ReportesCompras = () => {
     }
   };
 
+  // FILTROS
   const comprasFiltradas = compras.filter((c) => {
     const fecha = new Date(c.fecha_creacion);
+    const search = searchText.toLowerCase();
 
     const matchText =
-      c.id.toString().includes(searchText) ||
-      c.proveedor?.nombre?.toLowerCase().includes(searchText.toLowerCase());
+      c.id.toString().includes(search) ||
+      c.proveedor?.nombre?.toLowerCase().includes(search) ||
+      c.user?.nombre_completo?.toLowerCase().includes(search);
 
-    const matchEstado = filtroEstado === "TODOS" || c.estado === filtroEstado;
+    let matchEstado = true;
+    if (filtroEstado !== "TODOS") {
+      matchEstado = c.estado?.toLowerCase() === filtroEstado.toLowerCase();
+    }
+
     const matchFechaInicio = !fechaInicio || fecha >= new Date(fechaInicio);
     const matchFechaFin = !fechaFin || fecha <= new Date(fechaFin);
 
     return matchText && matchEstado && matchFechaInicio && matchFechaFin;
   });
-
-  const abrirModal = () => {
-    setShowAgregarCompra(true);
-    setProveedorCompra({ id: "", nombre: "", mostrarDropdown: false });
-    setProductosCompra([]);
-  };
-
-  const cerrarModal = () => setShowAgregarCompra(false);
 
   const resetearFiltros = () => {
     setSearchText("");
@@ -83,6 +83,15 @@ const ReportesCompras = () => {
     setFechaInicio("");
     setFechaFin("");
   };
+
+  // MODAL
+  const abrirModal = () => {
+    setShowAgregarCompra(true);
+    setProveedorCompra({ id: "", nombre: "", mostrarDropdown: false });
+    setProductosCompra([]);
+  };
+
+  const cerrarModal = () => setShowAgregarCompra(false);
 
   const agregarProducto = () => {
     setProductosCompra([
@@ -130,12 +139,14 @@ const ReportesCompras = () => {
     }
 
     try {
-      const compraRes = await axiosInstance.post("/compras", {
+      // Crear compra
+      const compraRes = await axiosInstance.post("/compra/crear", {
         proveedor_id: proveedorCompra.id,
         user_id: 1,
       });
       const compra = compraRes.data;
 
+      // Crear detalle de compra
       await axiosInstance.post(
         "/detalleCompra/bulk",
         productosCompra.map((p) => ({
@@ -150,6 +161,7 @@ const ReportesCompras = () => {
       fetchCompras();
     } catch (err) {
       console.error("Error guardar compra:", err);
+      alert("Error al guardar la compra");
     }
   };
 
@@ -158,7 +170,7 @@ const ReportesCompras = () => {
       <div className="reportes-card">
         <h1 className="reportes-title">Reporte de Compras</h1>
 
-        {/* FILTROS + SEARCH + AGREGAR COMPRA */}
+        {/* FILTROS Y BOTON DE AGREGAR COMPRA */}
         <div className="filter-bar real-filters">
           <div className="filter-group">
             <label>Desde:</label>
@@ -183,23 +195,101 @@ const ReportesCompras = () => {
             <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
               <option value="TODOS">Todos</option>
               <option value="activo">Activo</option>
-              <option value="pendiente">Pendiente</option>
+              <option value="anulado">Anulado</option>
             </select>
           </div>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Buscar proveedor o ID"
-            value={searchText}
-            onChange={(e) => setSearchText(e.target.value)}
-          />
-          <button className="btn-gray" onClick={resetearFiltros}>
-            Resetear filtros
+          <button
+            className="btn-gray"
+            onClick={() => {
+              setFechaInicio("");
+              setFechaFin("");
+              setFiltroEstado("TODOS");
+              setSearchText("");
+            }}
+          >
+            Resetear Filtros
           </button>
           <button className="btn-add-venta" onClick={abrirModal}>
             + Agregar Compra
           </button>
         </div>
+
+        {/* ACCIONES */}
+        <div className="actions-bar">
+          <div className="left-actions">
+            <button className="btn-gray" onClick={fetchCompras}>Actualizar</button>
+            <button
+              className="btn-gray"
+              onClick={() => setShowDetalleModal(true)}
+              disabled={!selectedCompra}
+            >
+              Ver detalle
+            </button>
+            <button
+              className="btn-gray"
+              onClick={async () => {
+                if (!selectedCompra) return;
+                const confirm = window.confirm(`¿Anular compra ${selectedCompra.id}?`);
+                if (!confirm) return;
+
+                try {
+                  await axiosInstance.put(`/compra/${selectedCompra.id}`, { estado: "anulado" });
+                  fetchCompras();
+                  setSelectedCompra(null);
+                } catch (err) {
+                  console.error(err);
+                  alert(err.response?.data?.message || "Error al anular la compra");
+                }
+              }}
+              disabled={!selectedCompra}
+            >
+              Anular Compra
+            </button>
+          </div>
+
+          <input
+            type="text"
+            className="search-input"
+            placeholder="Buscar proveedor, usuario o ID"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+          />
+        </div>
+
+        {showDetalleModal && selectedCompra && (
+          <div className="modal-overlay" onClick={() => setShowDetalleModal(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <h2>Detalle de Compra {selectedCompra.id}</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total Línea</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {selectedCompra.detalleCompra?.length > 0 ? (
+                    selectedCompra.detalleCompra.map((d) => (
+                      <tr key={d.id}>
+                        <td>{d.producto?.nombre || "N/A"}</td>
+                        <td>{d.cantidad}</td>
+                        <td>L.{d.precio_unitario}</td>
+                        <td>L.{(d.cantidad * d.precio_unitario).toFixed(2)}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr>
+                      <td colSpan={4}>No hay productos en esta compra.</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+              <button className="btn-gray" onClick={() => setShowDetalleModal(false)}>Cerrar</button>
+            </div>
+          </div>
+        )}
 
         {/* TABLA */}
         <div className="tabla-wrapper">
@@ -208,17 +298,36 @@ const ReportesCompras = () => {
               <tr>
                 <th>ID</th>
                 <th>Proveedor</th>
-                <th>Fecha</th>
-                <th>Total</th>
+                <th>ID Usuario</th>
+                <th>Usuario Responsable</th>
+                <th>Fecha de Creación</th>
+                <th>Fecha Actualización</th>
+                <th>Estado</th>
               </tr>
             </thead>
             <tbody>
               {comprasFiltradas.map((c) => (
-                <tr key={c.id}>
+                <tr
+                  key={c.id}
+                  className={selectedCompra?.id === c.id ? "selected-row" : ""}
+                  onClick={() => setSelectedCompra(c)}
+                >
                   <td>{c.id}</td>
-                  <td>{c.proveedor?.nombre}</td>
-                  <td>{new Date(c.fecha_creacion).toLocaleDateString()}</td>
-                  <td>L.{c.detalle?.reduce((a, d) => a + d.cantidad * d.precio_unitario, 0) || 0}</td>
+                  <td className="proveedor-column">
+                    {c.proveedor?.nombre || "-"}
+                    <div className="proveedor-id">{c.proveedor_id}</div>
+                  </td>
+                  <td>{c.user_id}</td>
+                  <td>{c.user?.nombre_completo || "-"}</td>
+                  <td>{new Date(c.fecha_creacion).toLocaleString()}</td>
+                  <td>{c.actualizado_en ? new Date(c.actualizado_en).toLocaleString() : "-"}</td>
+                  <td>
+                    {c.estado.toLowerCase() === "activo" ? (
+                      <span className="estado success">● Activo</span>
+                    ) : (
+                      <span className="estado cancel">● Anulado</span>
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -227,14 +336,15 @@ const ReportesCompras = () => {
 
         {/* MODAL AGREGAR COMPRA */}
         {showAgregarCompra && (
-          <div className="modal-overlay">
-            <div className="modal-content">
-              <h2>Nueva Compra</h2>
+          <div className="modal-overlay" onClick={cerrarModal}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <h2>Agregar Nueva Compra</h2>
 
               {/* PROVEEDOR */}
               <div className="form-group" style={{ position: "relative" }}>
-                <label>Proveedor</label>
+                <label>Proveedor:</label>
                 <input
+                  type="text"
                   placeholder="Buscar proveedor..."
                   value={proveedorCompra.nombre}
                   onChange={(e) =>
@@ -245,13 +355,16 @@ const ReportesCompras = () => {
                   }
                 />
                 {proveedorCompra.mostrarDropdown && (
-                  <div className="lista-dropdown">
+                  <div className="lista-productos">
                     {proveedores
-                      .filter((p) => p.nombre.toLowerCase().includes(proveedorCompra.nombre.toLowerCase()))
-                      .slice(0, 5)
-                      .map((p) => (
-                        <div key={p.id} className="item-dropdown" onClick={() => seleccionarProveedor(p)}>
-                          {p.nombre} (ID: {p.id})
+                      .filter(p => p.nombre.toLowerCase().includes(proveedorCompra.nombre.toLowerCase()))
+                      .map(p => (
+                        <div
+                          key={p.id}
+                          className="item-producto"
+                          onMouseDown={() => setProveedorCompra({ id: p.id, nombre: p.nombre, mostrarDropdown: false })}
+                        >
+                          {p.nombre}
                         </div>
                       ))}
                   </div>
@@ -259,38 +372,86 @@ const ReportesCompras = () => {
               </div>
 
               {/* PRODUCTOS */}
+              <div className="producto-row producto-row-headers">
+                <div>Producto</div>
+                <div>Cantidad</div>
+                <div>Precio Unitario</div>
+                <div></div>
+              </div>
+
               {productosCompra.map((p, idx) => (
                 <div key={idx} className="producto-row">
                   <input
-                    value={p.nombreProducto}
+                    type="text"
                     placeholder="Buscar producto..."
-                    onChange={(e) => {
+                    value={p.nombreProducto}
+                    onChange={e => {
                       actualizarProducto(idx, "nombreProducto", e.target.value);
                       const copia = [...productosCompra];
                       copia[idx].mostrarDropdown = true;
                       setProductosCompra(copia);
                     }}
+                    onFocus={() => {
+                      const copia = [...productosCompra];
+                      copia[idx].mostrarDropdown = true;
+                      setProductosCompra(copia);
+                    }}
+                    onBlur={() => {
+                      setTimeout(() => {
+                        const copia = [...productosCompra];
+                        copia[idx].mostrarDropdown = false;
+                        setProductosCompra(copia);
+                      }, 150);
+                    }}
                   />
-                  {p.mostrarDropdown && (
-                    <div className="lista-dropdown">
+
+                  {p.mostrarDropdown && productosDisponibles.length > 0 && (
+                    <div className="lista-productos">
                       {productosDisponibles
-                        .filter((prod) => prod.nombre.toLowerCase().includes(p.nombreProducto.toLowerCase()))
-                        .slice(0, 5)
-                        .map((prod) => (
-                          <div key={prod.id} className="item-dropdown" onClick={() => seleccionarProducto(idx, prod)}>
-                            {prod.nombre} (Stock: {prod.stock ?? 0}) - L.{prod.precio ?? "0.00"}
+                        .filter(prod =>
+                          prod.nombre.toLowerCase().includes(p.nombreProducto.toLowerCase())
+                        )
+                        .map(prod => (
+                          <div
+                            key={prod.id}
+                            className="item-producto"
+                            onMouseDown={() => seleccionarProducto(idx, prod)}
+                          >
+                            <div>{prod.nombre}</div>
+                            <div style={{ fontSize: "12px", color: "#555" }}>
+                              Precio: L.{prod.precio ?? "0.00"} | Stock: {prod.stock ?? 0}
+                            </div>
                           </div>
                         ))}
                     </div>
                   )}
-                  <input type="number" value={p.cantidad} onChange={(e) => actualizarProducto(idx, "cantidad", e.target.value)} />
-                  <input type="number" value={p.precioUnitario} onChange={(e) => actualizarProducto(idx, "precioUnitario", e.target.value)} />
-                  <button onClick={() => eliminarProducto(idx)}>X</button>
+
+                  {/* SPINNERS */}
+                  <input
+                    type="number"
+                    min="1"
+                    value={p.cantidad}
+                    onChange={e => actualizarProducto(idx, "cantidad", e.target.value)}
+                  />
+                  <div className="input-prefix">
+                    <span>L.</span>
+                    <input
+                      type="number"
+                      min="0"
+                      value={p.precioUnitario}
+                      onChange={e => actualizarProducto(idx, "precioUnitario", e.target.value)}
+                    />
+                  </div>
+
+                  <button type="button" className="btn-eliminar" onClick={() => eliminarProducto(idx)}>X</button>
                 </div>
               ))}
 
-              <button onClick={agregarProducto}>+ Producto</button>
-              <div className="total-venta">Total: L.{totalCompra.toFixed(2)}</div>
+              <button className="btn-agregar-producto" onClick={agregarProducto}>
+                + Agregar Producto
+              </button>
+
+              <div className="total-compra">Total: L.{totalCompra.toFixed(2)}</div>
 
               <div className="modal-actions">
                 <button className="btn-cancel" onClick={cerrarModal}>Cancelar</button>
