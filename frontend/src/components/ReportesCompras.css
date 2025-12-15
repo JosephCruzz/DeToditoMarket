@@ -22,7 +22,7 @@
   color: #2b2b2b;
 }
 
-/* BARRA DE FILTROS */
+/* FILTROS */
 .filter-bar.real-filters {
   display: flex;
   flex-wrap: wrap;
@@ -40,16 +40,26 @@
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 4px;
+  color: #444;
 }
 
-.input-fecha,
+.filter-group input[type="date"],
 .filter-group select,
-.search-input {
+.search-input,
+.input-fecha {
   padding: 8px 12px;
   font-size: 14px;
   border-radius: 6px;
   border: 1px solid #ccc;
   min-width: 140px;
+}
+
+.filter-group input[type="date"]:focus,
+.filter-group select:focus,
+.search-input:focus,
+.input-fecha:focus {
+  border-color: #007bff;
+  outline: none;
 }
 
 /* BOTONES */
@@ -67,7 +77,8 @@
   background: #d4d4d4;
 }
 
-.btn-add {
+.btn-add,
+.btn-add-venta {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -79,7 +90,8 @@
   margin-left: auto;
 }
 
-.btn-add:hover {
+.btn-add:hover,
+.btn-add-venta:hover {
   background-color: #0066d6;
 }
 
@@ -168,6 +180,7 @@
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
+.modal-content h2,
 .modal-content h3 {
   margin-top: 0;
   margin-bottom: 20px;
@@ -181,12 +194,6 @@
   display: flex;
   flex-direction: column;
   margin-bottom: 15px;
-}
-
-.form-group label {
-  font-weight: 500;
-  margin-bottom: 6px;
-  color: #444;
 }
 
 .form-group input,
@@ -231,12 +238,14 @@
   overflow-y: auto;
   background: #fff;
   border: 1px solid #ccc;
-  margin-top: 4px;
-  width: 100%;
-  position: absolute;
-  z-index: 5;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  z-index: 10;
 }
 
 .item-producto {
@@ -257,6 +266,7 @@
   color: #222;
 }
 
+/* MODAL ACTIONS */
 .modal-actions {
   display: flex;
   justify-content: flex-end;
@@ -292,4 +302,31 @@
 
 .modal-actions .btn-guardar:hover {
   background-color: #389e0d;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.estado.success {
+  background: #e6ffe9;
+  color: #2e9d40;
+}
+
+.estado.cancel {
+  background: #ffe6e6;
+  color: #cc3b3b;
+}
+
+.proveedor-column {
+  font-weight: 600;
+}
+
+.proveedor-id {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
 }
