@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 const models = require("./models");
 const sequelize = require("./config/database");
+const swaggerJsdoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
 const notificacionesRoutes = require("./routes/notificaciones");
@@ -15,9 +17,33 @@ const auditoriaRoutes = require("./routes/auditoria");
 const facturaRoutes = require("./routes/facturaRoutes");
 const detalleDeVentaRoutes = require("./routes/detalleDeVentaRoutes");
 
+// Swagger configuration
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "DeToditoMarket API",
+      version: "0.0.1",
+      description: "Sistema de gestion de inventario y facturas para DeToditoMarket",
+    },
+    servers: [
+      {
+        url: "http://localhost:3000",
+        description: "Development server",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Swagger UI
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 /*cambio a un codigo mas entendible tambien eliminamos sync ya que no se usa
 cuando usamos migrations */
