@@ -32,3 +32,35 @@ exports.addAuditoria = async (req, res) => {
         });
     }
 };
+
+// GET: obtener todos los registros de auditoria
+exports.getAuditorias = async (req, res) => {
+    try {
+        const registros = await Auditoria.findAll();
+        res.status(200).json(registros);
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al obtener registros de auditoría",
+            error: err.message
+        });
+    }
+};
+
+// GET: obtener un registro por ID
+exports.getAuditoriaById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const registro = await Auditoria.findByPk(id);
+
+        if (!registro) {
+            return res.status(404).json({ message: "Registro de auditoría no encontrado" });
+        }
+
+        res.status(200).json(registro);
+    } catch (err) {
+        res.status(500).json({
+            message: "Error al obtener registro de auditoría",
+            error: err.message
+        });
+    }
+};
