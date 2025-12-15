@@ -55,9 +55,14 @@ db.detalleCompra.belongsTo(db.compras, { foreignKey: "compra_id", as: "compra" }
 db.detalleCompra.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
 db.producto.hasMany(db.detalleCompra, { foreignKey: "producto_id", as: "detalleCompra" });
 
+// AUDITORIA
+db.auditoria.belongsTo(db.users, { foreignKey: "user_id", as: "usuario" });
+db.users.hasMany(db.auditoria, { foreignKey: "user_id", as: "auditorias" });
+
+db.auditoria.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
+db.producto.hasMany(db.auditoria, { foreignKey: "producto_id", as: "auditorias" });
 
 
-db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 module.exports = db;

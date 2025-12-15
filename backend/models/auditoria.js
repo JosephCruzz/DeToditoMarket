@@ -1,3 +1,5 @@
+//se elimino fecha
+
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -29,16 +31,14 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      fecha: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
-      },
     },
     {
       sequelize,
       tableName: "auditoria",
       schema: "public",
-      timestamps: false,
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: false,
       indexes: [
         {
           name: "auditoria_pkey",
