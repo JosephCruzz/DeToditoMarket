@@ -129,3 +129,26 @@ exports.editCai = async (req,res) => {
    });
  }
 }
+
+
+exports.getCai = async (req, res) => {
+  try {
+    const allCai = await cai.findAll({
+      order: [["id", "ASC"]]
+    });
+
+    if (allCai.length === 0) {
+      return res.status(404).json({
+        message: "No se encontraron registros de CAI en la base de datos"
+      });
+    }
+
+    return res.status(200).json(allCai);
+  } catch (err) {
+    return res.status(500).json({
+      message: "No se pudo obtener los datos",
+      error: err.message
+    });
+  }
+};
+
