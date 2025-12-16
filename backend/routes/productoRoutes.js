@@ -7,6 +7,43 @@
 
 /**
  * @swagger
+ * components:
+ *   schemas:
+ *     ProductoInput:
+ *       type: object
+ *       required:
+ *         - nombre
+ *         - precio
+ *         - stock
+ *         - stock_minimo
+ *         - fecha_vencimiento
+ *       properties:
+ *         id_user:
+ *           type: integer
+ *           description: ID del usuario que realiza la acción
+ *         nombre:
+ *           type: string
+ *           description: Nombre del producto
+ *         precio:
+ *           type: number
+ *           description: Precio del producto
+ *         stock:
+ *           type: integer
+ *           description: Cantidad en inventario
+ *         stock_minimo:
+ *           type: integer
+ *           description: Stock mínimo
+ *         fecha_vencimiento:
+ *           type: string
+ *           format: date
+ *           description: Fecha de vencimiento del producto
+ *         estado:
+ *           type: string
+ *           description: Estado del producto (para anulación)
+ */
+
+/**
+ * @swagger
  * /producto/getInventory:
  *   get:
  *     summary: Obtener todos los productos del inventario
@@ -70,8 +107,8 @@
 /**
  * @swagger
  * /producto/deleteFromInventory/{id}:
- *   delete:
- *     summary: Eliminar un producto del inventario
+ *   put:
+ *     summary: Anular o cambiar el estado de un producto
  *     tags: [Productos]
  *     parameters:
  *       - in: path
@@ -79,13 +116,28 @@
  *         required: true
  *         schema:
  *           type: integer
+ *         description: ID del producto a anular
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - estado
+ *             properties:
+ *               estado:
+ *                 type: string
+ *                 description: Estado nuevo del producto (ej. "Anulado")
  *     responses:
  *       200:
- *         description: Producto eliminado
+ *         description: Producto actualizado
+ *       400:
+ *         description: Bad request
  *       404:
  *         description: Producto no encontrado
  *       500:
- *         description: Error en servidor
+ *         description: Error del servidor
  */
 
 const express = require("express");
@@ -95,6 +147,6 @@ const productoController = require("../controllers/productoController");
 router.get("/getInventory", productoController.getInventory);
 router.post("/addToInventory", productoController.addToInventory);
 router.put("/editInventory/:id", productoController.editInventory);
-router.delete("/deleteFromInventory/:id", productoController.deleteFromInventory);
+router.put("/deleteFromInventory/:id", productoController.deleteFromInventory);
 
 module.exports = router;

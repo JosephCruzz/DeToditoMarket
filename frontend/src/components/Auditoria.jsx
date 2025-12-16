@@ -1,57 +1,64 @@
 import './Auditoria.css';
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
+import { toast } from "react-toastify";
 
 const Auditoria = () => {
-    
-    const [auditorias, setauditorias] = useState([]);
+    const [auditorias, setAuditorias] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {   
-        axiosInstance.get('audit/')
-        .then(response => {
-            setauditorias(response.data);
-            console.log(response.data);
-        })
-        .catch(error => {
-            console.error('There was an error!', error);
-        });     
+        fetchAuditorias();
     }, []);
 
-    return(
-        <div className='gestion-container'>
-            <div className='title-header'>
-                <h1>Auditoria</h1>
-            </div>
-            <div className='table-container'>
-                <div className='body-scroll'>
-                    <table className='table-productos'>
-                        <thead>
-                            <tr>
-                                <th>ID de Auditoria</th>
-                                <th>Usuario Responsable</th>
-                                <th>Producto</th>
-                                <th>Cantidad</th>
-                                <th>Fecha</th>
-                                <th>Estado</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {auditorias.map((audit)=>(
+    const fetchAuditorias = async () => {
+        setLoading(true);
+        try {
+            const response = await axiosInstance.get('/audit/');
+            setAuditorias(response.data || []);
+        } catch (error) {
+            console.error('Error fetching auditorias:', error);
+            toast.error("Error al conseguir auditorias.");
+        }
+        setLoading(false);
+    };
+
+    return (
+        <div className="reportes-outer">
+            <div className="reportes-card">
+                <h1 className="reportes-title">Auditoría</h1>
+
+                <div className="tabla-wrapper">
+                    {loading ? (
+                        <div className="spinner">Cargando...</div>
+                    ) : (
+                        <table className="ventas-table">
+                            <thead>
                                 <tr>
-                                    <td className='table-body'>{audit.id}</td>
-                                    <td className='table-body'>{audit.user_id}</td>
-                                    <td className='table-body'>{audit.producto_id}</td>
-                                    <td className='table-body'>{audit.cantidad}</td>
-                                    <td className='table-body'>{audit.fecha }</td>
-                                    <td className='table-body'>{audit.entrada_salida}</td>
+                                    <th>ID</th>
+                                    <th>Usuario</th>
+                                    <th>Producto</th>
+                                    <th>Acción</th>
+                                    <th>Descripción</th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                {auditorias.map(audit => (
+                                <tr key={audit.id}>
+                                    <td>{audit.id}</td>
+                                    <td>{audit.usuario?.nombre_completo || audit.user_id}</td>
+                                    <td>{audit.producto?.nombre || audit.producto_id}</td>
+                                    <td>{audit.entrada_salida}</td>
+                                    <td>{audit.descripcion}</td>
+                                </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
 export default Auditoria;

@@ -70,7 +70,11 @@ exports.deleteSupplier = async (request, response) => {
     try{
         const { id } = request.params;
 
-        if(!id){
+        const { 
+            estado
+        } = request.body;
+
+        if(!id||!estado){
             return response.status(400).json({message: "Bad Request"});
         }
 
@@ -79,7 +83,9 @@ exports.deleteSupplier = async (request, response) => {
             return response.status(404).json({message: "No se encontro el proveedor."});
         }
 
-        await supplierDelete.destroy();
+        await supplierDelete.update({
+            estado
+        });
         response.json({message: "Proveedor eliminado con exito."});
     }catch(error){
         response.status(500).json({error: error.message});
