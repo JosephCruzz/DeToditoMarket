@@ -1,4 +1,5 @@
 const express = require("express");
+
 const routes = express.Router();
 
 const detalleDeVentaC = require("../controllers/detalleVentaController");
