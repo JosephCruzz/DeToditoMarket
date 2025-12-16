@@ -1,3 +1,5 @@
+//se elimino fecha
+
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -16,6 +18,8 @@ module.exports = function (sequelize, DataTypes) {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       producto_id: {
         type: DataTypes.INTEGER,
@@ -24,21 +28,25 @@ module.exports = function (sequelize, DataTypes) {
           model: "producto",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       entrada_salida: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      fecha: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW
+      descripcion: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
     },
     {
       sequelize,
       tableName: "auditoria",
       schema: "public",
-      timestamps: false,
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: false,
       indexes: [
         {
           name: "auditoria_pkey",

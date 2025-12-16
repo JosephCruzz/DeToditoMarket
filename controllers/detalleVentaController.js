@@ -10,6 +10,33 @@ const arrFields = [
   { name: "metodo_pago", type: "string" },
   { name: "observaciones", type: "string" },
 ];
+
+//SE AGREGA POR BULK PARA QUE SE AGREGUEN VARIOS DETALLES A LA VEZ
+exports.addDetalleVentaBulk = async (req, res) => {
+  try {
+    if (!Array.isArray(req.body)) {
+      return res.status(400).json({
+        status: "Error",
+        message: "Se esperaba un arreglo de detalles",
+      });
+    }
+
+    const result = await DetalleVenta.bulkCreate(req.body);
+
+    return res.status(201).json({
+      status: "Success",
+      message: result,
+    });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({
+      status: "Error",
+      message: err.message,
+    });
+  }
+};
+
+
 exports.addDetalleVenta = async (req, res) => {
   try {
     for (const fields of arrFields) {

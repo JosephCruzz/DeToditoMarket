@@ -1,3 +1,5 @@
+//aqui se elimino una columna de fecha que estaba dando error
+
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -16,10 +18,8 @@ module.exports = function (sequelize, DataTypes) {
           model: "proveedores",
           key: "id",
         },
-      },
-      fecha: {
-        type: DataTypes.DATE,
-        allowNull: true,
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       user_id: {
         type: DataTypes.INTEGER,

@@ -1,4 +1,4 @@
- /** 
+/**
  * @swagger
  * tags:
  *   name: Usuarios
@@ -94,6 +94,17 @@
  *           type: string
  *       example:
  *         password: "nuevaPass1234"
+ *
+ *     UsuarioEstado:
+ *       type: object
+ *       required:
+ *         - estado
+ *       properties:
+ *         estado:
+ *           type: string
+ *           description: Nuevo estado del usuario, por ejemplo "Anulado"
+ *       example:
+ *         estado: "Anulado"
  */
 
 /**
@@ -111,6 +122,34 @@
  *               type: array
  *               items:
  *                 $ref: "#/components/schemas/Usuario"
+ *       500:
+ *         description: Error del servidor
+ */
+
+/**
+ * @swagger
+ * /user/getUser/{id}:
+ *   get:
+ *     summary: Obtener un usuario por ID
+ *     tags: [Usuarios]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: ID del usuario
+ *     responses:
+ *       200:
+ *         description: Información del usuario
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: "#/components/schemas/Usuario"
+ *       400:
+ *         description: Bad Request
+ *       404:
+ *         description: Usuario no encontrado
  *       500:
  *         description: Error del servidor
  */
@@ -145,10 +184,10 @@
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
- *         description: ID del usuario a editar
+ *         description: ID del usuario
  *     requestBody:
  *       required: true
  *       content:
@@ -199,21 +238,27 @@
 /**
  * @swagger
  * /user/deleteUser/{id}:
- *   delete:
- *     summary: Eliminar un usuario
+ *   put:
+ *     summary: Cambiar el estado de un usuario (eliminar o anular)
  *     tags: [Usuarios]
  *     parameters:
  *       - in: path
  *         name: id
+ *         required: true
  *         schema:
  *           type: integer
- *         required: true
  *         description: ID del usuario
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: "#/components/schemas/UsuarioEstado"
  *     responses:
  *       200:
- *         description: Usuario eliminado correctamente
+ *         description: Usuario eliminado o actualizado
  *       400:
- *         description: ID inválido
+ *         description: Bad Request
  *       404:
  *         description: Usuario no encontrado
  *       500:
@@ -225,9 +270,10 @@ const router = express.Router();
 const userController = require("../controllers/userController");
 
 router.get("/getUsers", userController.getUsers);
+router.get("/getUser/:id", userController.getUser);
 router.post("/addUser", userController.addUser);
 router.put("/editUser/:id", userController.editUser);
 router.put("/editPassword/:id", userController.editPassword);
-router.delete("/deleteUser/:id", userController.deleteUser);
+router.put("/deleteUser/:id", userController.deleteUser);
 
 module.exports = router;

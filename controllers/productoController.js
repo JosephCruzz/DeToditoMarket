@@ -1,10 +1,29 @@
 const db = require("../models");
 const Producto = db.producto;
+const Auditoria = db.auditoria;
 
 exports.getInventory = async (request, response) => {
     try{
         const inventory = await Producto.findAll();
-        response.json(inventory);
+        response.status(200).json(inventory);
+    }catch(error){
+        response.status(500).json({error: error.message});
+    }
+}
+
+exports.getProduct = async (request, response) => {
+    try{
+        const { id } = request.params;
+        if(!id){
+            return response.status(400).json({message: "Bad Request"});
+        }
+
+        const product = await Producto.findByPk(id);
+        if(!product){
+            return response.status(404).json({message: "Product not found."});
+        }
+
+        response.status(200).json(product);
     }catch(error){
         response.status(500).json({error: error.message});
     }
@@ -13,6 +32,7 @@ exports.getInventory = async (request, response) => {
 exports.addToInventory = async (request, response) => {
     try{
         const { 
+            id_user,
             nombre,
             precio,
             stock,
@@ -20,7 +40,7 @@ exports.addToInventory = async (request, response) => {
             fecha_vencimiento
         } = request.body;
 
-        if(!nombre||!precio||!stock||!stock_minimo||!fecha_vencimiento){
+        if(!id_user||!nombre||!precio||!stock||!stock_minimo||!fecha_vencimiento){
             return response.status(400).json({message: "Bad Request"});
         }
 
@@ -32,7 +52,19 @@ exports.addToInventory = async (request, response) => {
             fecha_vencimiento
         });
 
-        response.json(newProduct);
+        await Auditoria.create({
+            user_id: id_user,
+            producto_id: newProduct.id,
+            entrada_salida: "entrada",
+            descripcion: `Se agrego ${stock} unidades de ${nombre} al inventario el 
+            ${new Date().toLocaleString('es-HN', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                  })}`
+        });
+
+        response.status(201).json(newProduct);
     }catch(error){
         response.status(500).json({error: error.message});
     }
@@ -42,6 +74,7 @@ exports.editInventory = async (request, response) => {
     try{
         const { id } = request.params;
         const { 
+            id_user,
             nombre,
             precio,
             stock,
@@ -58,6 +91,34 @@ exports.editInventory = async (request, response) => {
             return response.status(404).json({message: "No se encontro el producto."});
         }
 
+        if(productEdit.stock < stock){
+            const num = stock - productEdit.stock;
+            await Auditoria.create({
+                user_id: id_user,
+                producto_id: productEdit.id,
+                entrada_salida: "Entrada",
+                descripcion: `Se agregaron ${num} unidades de ${nombre} del inventario el 
+                ${new Date().toLocaleString('es-HN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    })}`
+            });
+        }else if(productEdit.stock > stock){
+            const num = productEdit.stock - stock;
+            await Auditoria.create({
+                user_id: id_user,
+                producto_id: productEdit.id,
+                entrada_salida: "Salida",
+                descripcion: `Se sacaron ${num} unidades de ${nombre} del inventario el 
+                ${new Date().toLocaleString('es-HN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    })}`
+            });
+        }
+
         await productEdit.update({
             nombre,
             precio,
@@ -66,7 +127,7 @@ exports.editInventory = async (request, response) => {
             fecha_vencimiento
         });
 
-        response.json({message: "Producto editado con exito."});
+        response.status(200).json({message: "Producto editado con exito."});
     }catch(error){
         response.status(500).json({error: error.message});
     }
@@ -76,7 +137,11 @@ exports.deleteFromInventory = async (request, response) => {
     try{
         const { id } = request.params;
 
-        if(!id){
+        const { 
+            estado
+        } = request.body;
+
+        if(!id||!estado){
             return response.status(400).json({message: "Bad Request"});
         }
 
@@ -85,9 +150,11 @@ exports.deleteFromInventory = async (request, response) => {
             return response.status(404).json({message: "No se encontro el producto."});
         }
 
-        await productDelete.destroy();
+        await productDelete.update({
+            estado
+        });
 
-        response.json({message: "Producto eliminado con exito."});
+        response.status(200).json({message: "Producto eliminado con exito."});
     }catch(error){
         response.status(500).json({error: error.message});
     }

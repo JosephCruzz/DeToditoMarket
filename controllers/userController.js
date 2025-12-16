@@ -12,6 +12,23 @@ exports.getUsers = async (request, response) => {
     }
 }
 
+exports.getUser = async (request, response) => {
+    try{
+        const { id } = request.params;
+        if(!id){
+            return response.status(400).json({message: "Bad Request"});
+        }
+
+        const userFound = await User.findByPk(id);
+        if(!userFound){
+            return response.status(404).json({message: "No se encontro el usuario."});
+        }
+        response.json(userFound);
+    }catch(error){
+        response.status(500).json({error: error.message});
+    }
+}
+
 exports.addUser = async (request, response) => {
     try{
         const { 
@@ -19,6 +36,7 @@ exports.addUser = async (request, response) => {
             password,
             nombre_completo,
             rol_id,
+            email,
             estado
         } = request.body;
 
@@ -32,6 +50,7 @@ exports.addUser = async (request, response) => {
             password: cyptedPassword,
             nombre_completo,
             rol_id,
+            email,
             estado
         });
 
@@ -48,10 +67,11 @@ exports.editUser = async (request, response) => {
             username,
             nombre_completo,
             rol_id,
+            email,
             estado
         } = request.body;
 
-        if(!id||!username||!password||!nombre_completo||!rol_id||!estado){
+        if(!id||!username||!email||!nombre_completo||!rol_id||!estado){
             return response.status(400).json({message: "Bad Request"});
         }
 
@@ -64,11 +84,12 @@ exports.editUser = async (request, response) => {
             username,
             nombre_completo,
             rol_id,
+            email,
             actualizado_en: new Date(), 
             estado
         });
 
-        response.json({message: "Usuario editado con exito."});
+        response.json(userEdit);
     }catch(error){
         response.status(500).json({error: error.message});
     }
@@ -106,7 +127,11 @@ exports.deleteUser = async (request, response) => {
     try{
         const { id } = request.params;
 
-        if(!id){
+        const { 
+            estado
+        } = request.body;
+
+        if(!id||!estado){
             return response.status(400).json({message: "Bad Request"});
         }
 
@@ -115,7 +140,10 @@ exports.deleteUser = async (request, response) => {
             return response.status(404).json({message: "No se encontro el usuario."});
         }
 
-        await userDelete.destroy();
+        await userDelete.update({
+            estado,
+            actualizado_en: new Date()
+        });
 
         response.json({message: "Usuario eliminado con exito."});
     }catch(error){

@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      autoIncrement: true
     },
     cai_id: {
       type: DataTypes.INTEGER,
@@ -85,7 +86,12 @@ module.exports = function(sequelize, DataTypes) {
     observaciones: {
       type: DataTypes.TEXT,
       allowNull: true
-    }
+    },
+    estado: {
+      type: DataTypes.ENUM('VIGENTE', 'ANULADA'),
+      allowNull: false,
+      defaultValue: 'VIGENTE'
+    },
   }, {
     sequelize,
     tableName: 'factura',

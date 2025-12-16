@@ -1,5 +1,7 @@
 const db = require("../models");
 const Auditoria = db.auditoria;
+const Users = db.users;
+const Producto = db.producto;
 
 // POST: crear auditoria
 exports.addAuditoria = async (req, res) => {
@@ -36,8 +38,24 @@ exports.addAuditoria = async (req, res) => {
 // GET: obtener todos los registros de auditoria
 exports.getAuditorias = async (req, res) => {
     try {
-        const registros = await Auditoria.findAll();
-        res.status(200).json(registros);
+        const registros = await Auditoria.findAll({
+            include: [
+                { model: Users, as: "usuario", attributes: ["id", "nombre_completo"] },
+                { model: Producto, as: "producto", attributes: ["id", "nombre"] }
+            ],
+            order: [["created_at", "DESC"]] 
+        });
+
+        const registrosConFecha = registros.map(r => ({
+        id: r.id,
+        usuario: r.usuario,
+        producto: r.producto,
+        entrada_salida: r.entrada_salida,
+        descripcion: r.descripcion,
+        fecha: r.created_at ? new Date(r.created_at).toLocaleString() : null
+        }));
+
+        res.status(200).json(registrosConFecha);
     } catch (err) {
         res.status(500).json({
             message: "Error al obtener registros de auditoría",
