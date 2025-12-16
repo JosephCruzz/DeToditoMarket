@@ -22,11 +22,8 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.9.5",
     "react-scripts": "^5.0.1",
-<<<<<<< HEAD
     "recharts": "^3.6.0",
-=======
     "react-toastify": "^11.0.5",
->>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     "web-vitals": "^2.1.4"
   },
   "scripts": {

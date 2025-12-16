@@ -17,12 +17,34 @@ const GestionUsuarios = () => {
     email: "",
     estado: "activo"
   });
+  
+  // FILTROS
+  const [searchText, setSearchText] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("TODOS");
+  const [filtroRol, setFiltroRol] = useState("TODOS");
 
   useEffect(() => {   
     axiosInstance.get('/user/getUsers')
       .then(response => setUsers(response.data))
       .catch(error => console.error('There was an error!', error));
   }, []);
+
+  const filtrarUsuarios = () => {
+    return users.filter(u => {
+      const matchName =
+        u.nombre_completo.toLowerCase().includes(searchText.toLowerCase()) ||
+        u.username.toLowerCase().includes(searchText.toLowerCase());
+
+      const matchEstado =
+        filtroEstado === "TODOS" || u.estado.toLowerCase() === filtroEstado.toLowerCase();
+
+      const rolNombre = u.rol_id === 1 ? "Administrador" : "Empleado";
+      const matchRol =
+        filtroRol === "TODOS" || rolNombre.toLowerCase() === filtroRol.toLowerCase();
+
+      return matchName && matchEstado && matchRol;
+    });
+  };
 
   const openFormAdd = () => {
     setFormVisible(true);
@@ -66,64 +88,64 @@ const GestionUsuarios = () => {
       setNewUser({...newUser, [name]: name === "rol_id" ? Number(value): value});
   };
 
-const handleForm = async (event) => {
-  event.preventDefault();
+  const handleForm = async (event) => {
+    event.preventDefault();
 
-  try {
-    if (
-      newUser.username.trim() === "" ||
-      newUser.nombre.trim() === "" ||
-      newUser.apellido.trim() === "" ||
-      Number(newUser.rol_id) <= 0 ||
-      newUser.estado.trim() === ""||
-      newUser.email.trim()=== ""
-    ){
-      toast.error("Llenar todos los campos.");
-      return;
-    }
-
-    const findusername = users.some(u => u.username === newUser.username && u.id !== idUserToEdit);
-    const findemail = users.some(u => u.email === newUser.email && u.id !== idUserToEdit);
-    if(findusername){
-        toast.error("Este Nombre de usuario ya existe.");
+    try {
+      if (
+        newUser.username.trim() === "" ||
+        newUser.nombre.trim() === "" ||
+        newUser.apellido.trim() === "" ||
+        Number(newUser.rol_id) <= 0 ||
+        newUser.estado.trim() === ""||
+        newUser.email.trim()=== ""
+      ){
+        toast.error("Llenar todos los campos.");
         return;
-    }else if(findemail){
-        toast.error("Este Email ya esta en uso.");
-        return;
+      }
+
+      const findusername = users.some(u => u.username === newUser.username && u.id !== idUserToEdit);
+      const findemail = users.some(u => u.email === newUser.email && u.id !== idUserToEdit);
+      if(findusername){
+          toast.error("Este Nombre de usuario ya existe.");
+          return;
+      }else if(findemail){
+          toast.error("Este Email ya esta en uso.");
+          return;
+      }
+
+      const nombre_completo = `${newUser.nombre} ${newUser.apellido}`;
+
+      if (add) {
+        if (newUser.password.trim() === "") return;
+
+        await axiosInstance.post("/user/addUser", {
+          username: newUser.username,
+          password: newUser.password,
+          nombre_completo,
+          rol_id: Number(newUser.rol_id),
+          email: newUser.email,
+          estado: newUser.estado
+        });
+        toast.success("Usuario agregado con exito.");
+      } else {
+        await axiosInstance.put(`/user/editUser/${idUserToEdit}`, {
+          username: newUser.username,
+          nombre_completo,
+          rol_id: Number(newUser.rol_id),
+          email: newUser.email,
+          estado: newUser.estado
+        });
+        toast.success("Usuario editado con exito.");
+      }
+
+      const response = await axiosInstance.get("/user/getUsers");
+      setUsers(response.data);
+      setFormVisible(false);
+    } catch (error) {
+      console.error("Error en handleForm:", error);
     }
-
-    const nombre_completo = `${newUser.nombre} ${newUser.apellido}`;
-
-    if (add) {
-      if (newUser.password.trim() === "") return;
-
-      await axiosInstance.post("/user/addUser", {
-        username: newUser.username,
-        password: newUser.password,
-        nombre_completo,
-        rol_id: Number(newUser.rol_id),
-        email: newUser.email,
-        estado: newUser.estado
-      });
-      toast.success("Usuario agregado con exito.");
-    } else {
-      await axiosInstance.put(`/user/editUser/${idUserToEdit}`, {
-        username: newUser.username,
-        nombre_completo,
-        rol_id: Number(newUser.rol_id),
-        email: newUser.email,
-        estado: newUser.estado
-      });
-      toast.success("Usuario editado con exito.");
-    }
-
-    const response = await axiosInstance.get("/user/getUsers");
-    setUsers(response.data);
-    setFormVisible(false);
-  } catch (error) {
-    console.error("Error en handleForm:", error);
-  }
-};
+  };
 
   const deleteUser = async(id) => {
     try {
@@ -168,6 +190,46 @@ const handleForm = async (event) => {
           </button>
         </div>
 
+        {/* BARRA DE FILTROS */}
+        <div className="filter-bar">
+          <div className="filter-group">
+            <input
+              type="text"
+              placeholder="Buscar por nombre o usuario..."
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              className="search-input"
+            />
+          </div>
+
+          <div className="filter-group">
+            <select value={filtroEstado} onChange={e => setFiltroEstado(e.target.value)}>
+              <option value="TODOS">Todos</option>
+              <option value="Activo">Activo</option>
+              <option value="Inactivo">Inactivo</option>
+              <option value="Anulado">Anulado</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <select value={filtroRol} onChange={e => setFiltroRol(e.target.value)}>
+              <option value="TODOS">Todos</option>
+              <option value="Administrador">Administrador</option>
+              <option value="Empleado">Empleado</option>
+            </select>
+          </div>
+
+          <div className="filter-group">
+            <button
+              className="btn-gray"
+              onClick={() => { setSearchText(""); setFiltroEstado("TODOS"); setFiltroRol("TODOS"); }}
+            >
+              Resetear Filtros
+            </button>
+          </div>
+        </div>
+
+        {/* TABLA */}
         <div className='tabla-wrapper'>
           <table className='ventas-table'>
             <thead>
@@ -183,24 +245,22 @@ const handleForm = async (event) => {
               </tr>
             </thead>
             <tbody>
-              {users.map(user => (
+              {filtrarUsuarios().map(user => (
                 <tr key={user.id}>
-                    <td>{user.id}</td>
+                  <td>{user.id}</td>
                   <td>{user.username}</td>
                   <td>{user.nombre_completo}</td>
                   <td>{user.email}</td>
                   <td>{user.rol_id === 1 ? "Administrador" : "Empleado"}</td>
                   <td>{user.estado}</td>
-                  <td>{new Date(user.actualizado_en).toLocaleString('es-HN', {
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit',
-                  })}</td>
+                  <td>{new Date(user.actualizado_en).toLocaleString()}</td>
                   <td>
-                    <div className='left-actions'>
-                      <button onClick={() => openFormEdit(user)}><Icon.Edit /></button>
-                      <button onClick={() => deleteUser(user.id)}><Icon.Delete /></button>
-                    </div>
+                    <button onClick={() => openFormEdit(user)} className="options.edit-button">
+                      <Icon.Edit />
+                    </button>
+                    <button onClick={() => deleteUser(user.id)} className="options.delete-button">
+                      <Icon.Delete />
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -208,6 +268,7 @@ const handleForm = async (event) => {
           </table>
         </div>
 
+        {/* MODAL FORMULARIO */}
         {formVisible && (
         <div className='modal-overlay'>
             <form className='add-form' onSubmit={handleForm}>
@@ -258,6 +319,7 @@ const handleForm = async (event) => {
                 </select>
                 </div>
             </div>
+
             <div className='form-row'>
                 {add && (
                 <div className='form-column-1'>
@@ -276,9 +338,11 @@ const handleForm = async (event) => {
                 <select name='estado' value={newUser.estado} onChange={handleChange}>
                     <option value="Activo">Activo</option>
                     <option value="Inactivo">Inactivo</option>
+                    <option value="Anulado">Anulado</option>
                 </select>
                 </div>
             </div>
+
             <div className='form-row'>
                 <div className='form-column-1'>
                     <label>Email</label>
@@ -289,22 +353,16 @@ const handleForm = async (event) => {
                     name='email'
                     value={newUser.email}
                     onChange={handleChange}
-                    ></input>
+                    />
                 </div>
             </div>
+
             <div className='form-buttons'>
-                <button
-                type='button'
-                className='cancel-button'
-                onClick={closeForm}
-                >
-                Cancelar
+                <button type='button' className='cancel-button' onClick={closeForm}>
+                  Cancelar
                 </button>
-                <button
-                type='submit'
-                className='add-button'
-                >
-                {add ? "Agregar" : "Editar"}
+                <button type='submit' className='add-button'>
+                  {add ? "Agregar" : "Editar"}
                 </button>
             </div>
             </form>

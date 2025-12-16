@@ -183,10 +183,6 @@
   gap: 12px;
   margin-top: -10px;
   padding: 0px 200px 0px 200px;
-<<<<<<< HEAD
-
-=======
->>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
 }
 
 .add-button {
@@ -218,8 +214,6 @@
 .cancel-button:hover {
   background-color: #eb4848;
 }
-<<<<<<< HEAD
-=======
 
 .delete-form{
   display: flex;
@@ -245,4 +239,35 @@
   margin-top: 10px;
   padding: 10px 20px 0px 200px;
 }
->>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar .search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar .btn-gray {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+}
