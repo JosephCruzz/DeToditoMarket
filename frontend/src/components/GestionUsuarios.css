@@ -1,0 +1,273 @@
+/* CONTENEDOR GENERAL */
+.gestion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px;
+  background: #f4f4f4;
+  font-family: "Poppins", sans-serif;
+}
+
+.title-header {
+  width: 100%;
+  max-width: 1400px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.title-header h1 {
+  font-size: 28px;
+  color: #2b2b2b;
+}
+
+.btn-add-venta {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-add-venta:hover {
+  background-color: #0066d6;
+}
+
+/* TABLA */
+.table-container {
+  width: 100%;
+  max-width: 1400px;
+  overflow-x: auto;
+  border-radius: 6px;
+}
+
+.ventas-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.ventas-table th,
+.ventas-table td {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.ventas-table thead {
+  background: #f8f8f8;
+}
+
+.ventas-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.ventas-table tbody tr:hover {
+  background: #eef7ff;
+}
+
+.option-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.options-edit-button {
+  background-color: #51ec2a;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.options-delete-button {
+  background-color: #cd0000;
+  border: none;
+  border-radius: 6px;
+  padding: 6px;
+  cursor: pointer;
+}
+
+.options-edit-button:hover {
+  background-color: #3bb216;
+}
+
+.options-delete-button:hover {
+  background-color: #a80000;
+}
+
+/* MODAL OVERLAY */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* dark overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* MODAL CONTENT */
+.add-form {
+  background: #fff;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 600px;
+  padding: 0px 0px 00px 00px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-header {
+  background: #2e9fd4;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+}
+
+.form-header h2 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* FORM ROWS */
+.form-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.form-column-1,
+.form-column-2 {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0px 50px 0px 30px;
+}
+
+.form-column-1 input,
+.form-column-2 input,
+.form-column-1 select,
+.form-column-2 select {
+  padding: 10px;
+  font-size: 15px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border 0.2s;
+}
+
+.form-column-1 input:focus,
+.form-column-2 input:focus,
+.form-column-1 select:focus,
+.form-column-2 select:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+/* FORM BUTTONS */
+.form-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: -10px;
+  padding: 0px 200px 0px 200px;
+}
+
+.add-button {
+  background-color: #2a4eec;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.add-button:hover {
+  background-color: #5772eb;
+}
+
+.cancel-button {
+  background-color: #ec2a2a;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cancel-button:hover {
+  background-color: #eb4848;
+}
+
+.delete-form{
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+}
+.delete-form-header{
+  background: #2e9fd4;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+}
+.delete-form-header h2{
+  margin: 0;
+  font-size: 22px;
+}
+.delete-form-buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 20px 0px 200px;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filter-bar .search-input {
+  flex: 1;
+  min-width: 200px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar select {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-bar .btn-gray {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: #ccc;
+  cursor: pointer;
+}
