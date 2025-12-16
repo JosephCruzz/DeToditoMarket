@@ -1,4 +1,3 @@
-import React from 'react';
 import Sidebar from '../components/Sidebar';
 import SalesChart from '../components/SalesChart';
 import FavoriteProduct from '../components/FavoriteProduct';
