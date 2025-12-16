@@ -2,16 +2,16 @@ const express = require("express");
 const app = express();
 const models = require("./models");
 const sequelize = require("./config/database");
-const swaggerJsdoc = require("swagger-jsdoc");
-const swaggerUi = require("swagger-ui-express");
 const comprasRoutes = require("./routes/comprasRoutes");
 const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
 const notificacionesRoutes = require("./routes/notificaciones");
 const caiRoutes = require("./routes/caiRoutes.js");
+const detalleVentaRoutes = require("./routes/detalleVentaRoutes.js")
 const rolesRoutes = require("./routes/roles");
 const permisosRoutes = require("./routes/permisos");
 const comprobantesRoutes = require("./routes/comprobantes");
 const auditoriaRoutes = require("./routes/auditoria");
+
 const facturaRoutes = require("./routes/facturaRoutes");
 const detalleDeVentaRoutes = require("./routes/detalleDeVentaRoutes");
 
@@ -21,17 +21,21 @@ const swaggerOptions = {
     openapi: "3.0.0",
     info: {
       title: "DeToditoMarket API",
-      version: "1.0.0",
-      description: "API para el sistema de gestión de inventario y facturas de DeToditoMarket",
+      version: "0.0.1",
+      description: "Sistema de gestión de inventario y facturas para DeToditoMarket",
+      contact: {
+        name: "DeToditoMarket Team",
+        url: "https://github.com/JosephCruzz/DeToditoMarket"
+      }
     },
     servers: [
       {
         url: "http://localhost:3000",
-        description: "Servidor de desarrollo",
-      },
-    ],
+        description: "Servidor de desarrollo"
+      }
+    ]
   },
-  apis: ["./routes/*.js"],
+  apis: ["./routes/*.js"]
 };
 
 const swaggerDocs = swaggerJsdoc(swaggerOptions);
