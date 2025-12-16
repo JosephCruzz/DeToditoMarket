@@ -19,6 +19,9 @@ const Header = () => {
 
     useEffect(() => {
         switch (navigateView) {
+            case -1:
+                navigate("/");
+                break;
             case 0:
                 navigate("/gestion/productos");
                 break;
@@ -41,6 +44,7 @@ const Header = () => {
                 break;
         }
     }, [navigateView, navigate]);
+
 
     return (
         <div>
@@ -77,7 +81,7 @@ const Header = () => {
                 </div>
             </div>
             <div className='bottom-container'>
-                <div className='options'>
+                <div className='options' onClick={() => setNavigateView(-1)}>
                     <img
                         src={dashboardIcon}
                         alt='icon'

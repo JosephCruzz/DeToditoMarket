@@ -8,6 +8,7 @@ import GestionProveedores from './components/GestionProveedores.jsx';
 import Auditoria from './components/Auditoria.jsx';
 import ReportesVentas from './components/ReportesVentas.jsx';
 import ReportesCompras from './components/ReportesCompras.jsx';
+import Dashboard from './pages/Dashboard.jsx';
 
 
 function App() {
@@ -17,7 +18,7 @@ function App() {
       <Container>
         <Header/> 
         <Routes>
-          <Route path="/" element={<GestionProductos/>}/>
+          <Route path="/" element={<Dashboard/>}/>
           <Route path="/gestion/productos" element={<GestionProductos/>}/>
           <Route path="/gestion/usuarios" element={<GestionUsuarios/>}/>
           <Route path="/gestion/proveedores" element={<GestionProveedores/>}/>
