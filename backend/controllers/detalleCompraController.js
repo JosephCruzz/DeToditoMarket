@@ -75,3 +75,24 @@ exports.addDetalleCompraBulk = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+
+exports.getDetalleCompra = async (req,res) => {
+  try{
+    const getDC = await detalleCompra.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    if(getDC.length === 0){
+      return res.status(404).json({
+        message: "No se encontraron detalles de compra en la base de datos"
+      });
+    }
+
+    return res.status(200).json(getDC);
+  }catch (e) {
+    return res.status(500).json({
+      message: "No se pudo obtener los datos",
+      error: e.message
+    });
+  }
+}
