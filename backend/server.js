@@ -15,7 +15,7 @@ const compraRoute = require("./routes/comprasRoutes");
 const detalleCompraRoute = require("./routes/detalleCompraRoutes");
 const comprobanteRoute = require("./routes/comprobanteRoutes");
 const facturaRoute = require("./routes/facturaRoutes");
-const detalleVentaRoute = require("./routes/detalleVentaRoutes");
+const detalleVentaRoute = require("./routes/detalleDeVentaRoutes");
 const permisoRoute = require("./routes/permisoRoutes");
 const rolRoute = require("./routes/rolRoutes");
 
