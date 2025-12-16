@@ -88,18 +88,10 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     estado: {
-<<<<<<< HEAD
       type: DataTypes.ENUM('VIGENTE', 'ANULADA'),
       allowNull: false,
       defaultValue: 'VIGENTE'
     },
-=======
-  type: DataTypes.ENUM('VIGENTE', 'ANULADA'),
-  allowNull: false,
-  defaultValue: 'VIGENTE'
-},
-
->>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
   }, {
     sequelize,
     tableName: 'factura',
