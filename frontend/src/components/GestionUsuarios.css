@@ -183,7 +183,10 @@
   gap: 12px;
   margin-top: -10px;
   padding: 0px 200px 0px 200px;
+<<<<<<< HEAD
 
+=======
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
 }
 
 .add-button {
@@ -215,3 +218,31 @@
 .cancel-button:hover {
   background-color: #eb4848;
 }
+<<<<<<< HEAD
+=======
+
+.delete-form{
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+}
+.delete-form-header{
+  background: #2e9fd4;
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px 8px 0 0;
+  text-align: center;
+}
+.delete-form-header h2{
+  margin: 0;
+  font-size: 22px;
+}
+.delete-form-buttons{
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 10px 20px 0px 200px;
+}
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f

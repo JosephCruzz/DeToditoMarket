@@ -1,6 +1,7 @@
 import './GestionProveedores.css';
 import { useState, useEffect } from 'react';
 import axiosInstance from "../api/axiosInstance";
+import { toast } from "react-toastify";
 
 const GestionProveedores = () => {
     const [formVisible, setFormVisible] = useState(false);
@@ -41,13 +42,27 @@ const GestionProveedores = () => {
 
     const handleForm = async (e) => {
         e.preventDefault();
+<<<<<<< HEAD
         if (!newProvider.nombre || !newProvider.telefono || !newProvider.direccion || !newProvider.estado) return;
+=======
+        if (!newProvider.nombre || !newProvider.telefono || !newProvider.direccion || !newProvider.estado){
+            toast.error("Llenar todos los campos.");
+            return;
+        }
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
 
         try {
             if (add) {
                 await axiosInstance.post(`proveedor/addSupplier`, { ...newProvider });
+<<<<<<< HEAD
             } else {
                 await axiosInstance.put(`proveedor/editSupplier/${idProviderToEdit}`, { ...newProvider });
+=======
+                toast.success("Proveedor agregado con exito.");
+            } else {
+                await axiosInstance.put(`proveedor/editSupplier/${idProviderToEdit}`, { ...newProvider });
+                toast.success("Proveedor editado con exito.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
             }
             const res = await axiosInstance.get(`proveedor/getSuppliers`);
             setProviders(res.data);
@@ -59,11 +74,29 @@ const GestionProveedores = () => {
 
     const deleteProvider = async (id) => {
         try {
+<<<<<<< HEAD
             await axiosInstance.delete(`proveedor/deleteSupplier/${id}`);
             const res = await axiosInstance.get(`proveedor/getSuppliers`);
             setProviders(res.data);
         } catch (error) {
             console.error(error);
+=======
+            if(!id){
+                toast.error("Id requerida.");
+                return;
+            }
+            const confirm = window.confirm(`¿Desea eliminar este proveedor?`);
+            if (!confirm) return;
+            await axiosInstance.put(`proveedor/deleteSupplier/${id}`,{
+                estado: "Anulado"
+            });
+            const res = await axiosInstance.get(`proveedor/getSuppliers`);
+            setProviders(res.data);
+            toast.success("Provedor eliminado cone exito");
+        } catch (error) {
+            console.error(error);
+            toast.error("Error al eliminar proveedor.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
         }
     };
 
@@ -81,9 +114,16 @@ const GestionProveedores = () => {
     };
 
     return (
+<<<<<<< HEAD
         <div className='gestion-container'>
             <div className='title-header'>
                 <h1>Gestión de Proveedores</h1>
+=======
+        <div className='reportes-outer'>
+            <div className='reportes-card'>
+            <div className='actions-bar'>
+                <h1 className='reportes-title'>Gestión de Proveedores</h1>
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
                 <button className='btn-add-venta' onClick={openFormAdd}>+ Agregar Proveedor</button>
             </div>
 
@@ -157,6 +197,7 @@ const GestionProveedores = () => {
                     </div>
                 </div>
             )}
+            </div>
         </div>
     );
 };

@@ -1,6 +1,10 @@
 import "./ReportesCompras.css";
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
+<<<<<<< HEAD
+=======
+import { toast } from "react-toastify";
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
 
 const ReportesCompras = () => {
   const [compras, setCompras] = useState([]);
@@ -35,6 +39,10 @@ const ReportesCompras = () => {
       setCompras(res.data || []);
     } catch (err) {
       console.error("Error compras:", err);
+<<<<<<< HEAD
+=======
+      toast.error("Error al conseguir las compras");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     }
   };
 
@@ -44,6 +52,10 @@ const ReportesCompras = () => {
       setProveedores(res.data || []);
     } catch (err) {
       console.error("Error proveedores:", err);
+<<<<<<< HEAD
+=======
+      toast.error("Error al conseguir los proveedores.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     }
   };
 
@@ -53,6 +65,10 @@ const ReportesCompras = () => {
       setProductosDisponibles(res.data || []);
     } catch (err) {
       console.error("Error productos:", err);
+<<<<<<< HEAD
+=======
+      toast.error("Error al conseguir los productos.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     }
   };
 
@@ -134,7 +150,11 @@ const ReportesCompras = () => {
 
   const guardarCompra = async () => {
     if (!proveedorCompra.id || productosCompra.length === 0) {
+<<<<<<< HEAD
       alert("Seleccione proveedor y productos");
+=======
+      toast.success("Seleccione proveedor y productos");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
       return;
     }
 
@@ -159,9 +179,16 @@ const ReportesCompras = () => {
 
       cerrarModal();
       fetchCompras();
+<<<<<<< HEAD
     } catch (err) {
       console.error("Error guardar compra:", err);
       alert("Error al guardar la compra");
+=======
+      toast.success("Compra agregada con exito.");
+    } catch (err) {
+      console.error("Error guardar compra:", err);
+      toast.error("Error al guardar la compra.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     }
   };
 
@@ -236,9 +263,16 @@ const ReportesCompras = () => {
                   await axiosInstance.put(`/compra/${selectedCompra.id}`, { estado: "anulado" });
                   fetchCompras();
                   setSelectedCompra(null);
+<<<<<<< HEAD
                 } catch (err) {
                   console.error(err);
                   alert(err.response?.data?.message || "Error al anular la compra");
+=======
+                  toast.success("Se anulo la compra con exito.");
+                } catch (err) {
+                  console.error(err);
+                  toast.error("Error al anular la compra.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
                 }
               }}
               disabled={!selectedCompra}
@@ -465,4 +499,8 @@ const ReportesCompras = () => {
   );
 };
 
+<<<<<<< HEAD
 export default ReportesCompras;
+=======
+export default ReportesCompras;
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f

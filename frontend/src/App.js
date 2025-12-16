@@ -6,16 +6,19 @@ import GestionProductos from './components/GestionProductos.jsx';
 import GestionUsuarios from './components/GestionUsuarios.jsx';
 import GestionProveedores from './components/GestionProveedores.jsx';
 import Auditoria from './components/Auditoria.jsx';
+import Dashboard from './pages/Dashboard.jsx';
+import MiPerfil from './components/MiPerfil.jsx';
 import ReportesVentas from './components/ReportesVentas.jsx';
 import ReportesCompras from './components/ReportesCompras.jsx';
-import Dashboard from './pages/Dashboard.jsx';
-
+import { ToastContainer } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   
   return (
     <Router>
       <Container>
+        <ToastContainer></ToastContainer>
         <Header/> 
         <Routes>
           <Route path="/" element={<Dashboard/>}/>
@@ -24,7 +27,8 @@ function App() {
           <Route path="/gestion/proveedores" element={<GestionProveedores/>}/>
           <Route path="/reportes/auditoria" element={<Auditoria/>}/> 
           <Route path="/reportes/ventas" element={<ReportesVentas/>}/> 
-          <Route path="/reportes/compras" element={<ReportesCompras/>}/> 
+          <Route path="/reportes/compras" element={<ReportesCompras/>}/>
+          <Route path="/perfil/:id" element={<MiPerfil/>}/>
         </Routes>
       </Container>
     </Router>

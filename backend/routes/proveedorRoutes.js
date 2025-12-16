@@ -42,10 +42,14 @@
  *           type: string
  *         direccion:
  *           type: string
+ *         estado:
+ *           type: string
+ *           description: Estado del proveedor (opcional, por ejemplo "Activo" o "Anulado")
  *       example:
  *         nombre: "Distribuidora López"
  *         telefono: "9988-7766"
  *         direccion: "Barrio Centro, SPS"
+ *         estado: "Activo"
  */
 
 /**
@@ -79,10 +83,6 @@
  *         application/json:
  *           schema:
  *             $ref: "#/components/schemas/ProveedorInput"
- *           example:
- *             nombre: "Distribuidora López"
- *             telefono: "9988-7766"
- *             direccion: "Barrio Centro, SPS"
  *     responses:
  *       200:
  *         description: Proveedor agregado exitosamente
@@ -110,21 +110,7 @@
  *       content:
  *         application/json:
  *           schema:
- *             type: object
- *             properties:
- *               nombre:
- *                 type: string
- *               telefono:
- *                 type: string
- *               direccion:
- *                 type: string
- *               estado:
- *                 type: string
- *             example:
- *               nombre: "Distribuidora López"
- *               telefono: "9988-7766"
- *               direccion: "Barrio Centro, SPS"
- *               estado: "Activo"
+ *             $ref: "#/components/schemas/ProveedorInput"
  *     responses:
  *       200:
  *         description: Proveedor editado exitosamente
@@ -139,8 +125,8 @@
 /**
  * @swagger
  * /proveedor/deleteSupplier/{id}:
- *   delete:
- *     summary: Eliminar un proveedor
+ *   put:
+ *     summary: Anular o cambiar el estado de un proveedor
  *     tags: [Proveedores]
  *     parameters:
  *       - in: path
@@ -148,12 +134,26 @@
  *         required: true
  *         schema:
  *           type: integer
- *         description: ID del proveedor a eliminar
+ *         description: ID del proveedor a anular
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - estado
+ *             properties:
+ *               estado:
+ *                 type: string
+ *                 description: Nuevo estado del proveedor (ej. "Anulado")
+ *             example:
+ *               estado: "Anulado"
  *     responses:
  *       200:
- *         description: Proveedor eliminado exitosamente
+ *         description: Proveedor actualizado
  *       400:
- *         description: ID inválido
+ *         description: Bad Request
  *       404:
  *         description: Proveedor no encontrado
  *       500:
@@ -167,6 +167,6 @@ const proveedorController = require("../controllers/proveedorController");
 router.get("/getSuppliers", proveedorController.getSuppliers);
 router.post("/addSupplier", proveedorController.addSupplier);
 router.put("/editSupplier/:id", proveedorController.editSupplier);
-router.delete("/deleteSupplier/:id", proveedorController.deleteSupplier);
+router.put("/deleteSupplier/:id", proveedorController.deleteSupplier);
 
 module.exports = router;

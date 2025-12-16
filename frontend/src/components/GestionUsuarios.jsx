@@ -1,6 +1,7 @@
 import './GestionUsuarios.css';
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
+import { toast } from "react-toastify";
 
 const GestionUsuarios = () => {
   const [formVisible, setFormVisible] = useState(false);
@@ -12,7 +13,8 @@ const GestionUsuarios = () => {
     password: "",  
     nombre: "",  
     apellido: "",    
-    rol_id: "",
+    rol_id: 0,
+    email: "",
     estado: "activo"
   });
 
@@ -30,7 +32,8 @@ const GestionUsuarios = () => {
       password: "",  
       nombre: "",  
       apellido: "",    
-      rol_id: "",
+      rol_id: 0,
+      email: "",
       estado: "activo"
     });
   };
@@ -48,7 +51,8 @@ const GestionUsuarios = () => {
       nombre: n,    
       apellido: a,
       rol_id: user.rol_id,
-      estado: user.estado
+      email: user.email,
+      estado: user.estado === "Anulado" ? "Activo" : user.estado
     });
   };
 
@@ -57,8 +61,9 @@ const GestionUsuarios = () => {
     setAdd(false);
   };
 
-  const handleChange = (event) => {
-    setNewUser({...newUser, [event.target.name]: event.target.value});
+  const handleChange = (event) =>{
+      const {name, value} = event.target;
+      setNewUser({...newUser, [name]: name === "rol_id" ? Number(value): value});
   };
 
 const handleForm = async (event) => {
@@ -70,9 +75,22 @@ const handleForm = async (event) => {
       newUser.nombre.trim() === "" ||
       newUser.apellido.trim() === "" ||
       Number(newUser.rol_id) <= 0 ||
-      newUser.estado.trim() === ""
-    )
+      newUser.estado.trim() === ""||
+      newUser.email.trim()=== ""
+    ){
+      toast.error("Llenar todos los campos.");
       return;
+    }
+
+    const findusername = users.some(u => u.username === newUser.username && u.id !== idUserToEdit);
+    const findemail = users.some(u => u.email === newUser.email && u.id !== idUserToEdit);
+    if(findusername){
+        toast.error("Este Nombre de usuario ya existe.");
+        return;
+    }else if(findemail){
+        toast.error("Este Email ya esta en uso.");
+        return;
+    }
 
     const nombre_completo = `${newUser.nombre} ${newUser.apellido}`;
 
@@ -84,20 +102,23 @@ const handleForm = async (event) => {
         password: newUser.password,
         nombre_completo,
         rol_id: Number(newUser.rol_id),
-        estado: newUser.estado,
+        email: newUser.email,
+        estado: newUser.estado
       });
+      toast.success("Usuario agregado con exito.");
     } else {
       await axiosInstance.put(`/user/editUser/${idUserToEdit}`, {
         username: newUser.username,
         nombre_completo,
         rol_id: Number(newUser.rol_id),
-        estado: newUser.estado,
+        email: newUser.email,
+        estado: newUser.estado
       });
+      toast.success("Usuario editado con exito.");
     }
 
     const response = await axiosInstance.get("/user/getUsers");
     setUsers(response.data);
-
     setFormVisible(false);
   } catch (error) {
     console.error("Error en handleForm:", error);
@@ -106,11 +127,21 @@ const handleForm = async (event) => {
 
   const deleteUser = async(id) => {
     try {
-      await axiosInstance.delete(`/user/deleteUser/${id}`);
+      if(!id){
+        toast.error("Id requerida.");
+        return;
+      }
+      const confirm = window.confirm(`¿Desea anular este usuario?`);
+      if (!confirm) return; 
+      await axiosInstance.put(`/user/deleteUser/${id}`,{
+          estado: "Anulado"
+      });
       const response = await axiosInstance.get(`user/getUsers`);
       setUsers(response.data);
+      toast.success("Usuario anulado con exito.");
     } catch(error) {
       console.log(error);
+      toast.error("Error al anular usuario.");
     }
   };
 
@@ -144,9 +175,10 @@ const handleForm = async (event) => {
                 <th>ID</th>
                 <th>Usuario</th>
                 <th>Nombre Completo</th>
+                <th>Email</th>
                 <th>Rol</th>
-                <th>Actualización</th>
                 <th>Estado</th>
+                <th>Actualización</th>
                 <th>Opciones</th>
               </tr>
             </thead>
@@ -156,14 +188,13 @@ const handleForm = async (event) => {
                     <td>{user.id}</td>
                   <td>{user.username}</td>
                   <td>{user.nombre_completo}</td>
-                  <td>{user.rol_id}</td>
+                  <td>{user.email}</td>
+                  <td>{user.rol_id === 1 ? "Administrador" : "Empleado"}</td>
                   <td>{user.estado}</td>
                   <td>{new Date(user.actualizado_en).toLocaleString('es-HN', {
                   year: 'numeric',
                   month: '2-digit',
                   day: '2-digit',
-                  hour: '2-digit',
-                  minute: '2-digit',
                   })}</td>
                   <td>
                     <div className='left-actions'>
@@ -221,12 +252,12 @@ const handleForm = async (event) => {
                 <div className='form-column-2'>
                 <label>Rol</label>
                 <select name='rol_id' value={newUser.rol_id} onChange={handleChange}>
+                    <option value={0}>Selecciona un rol</option>
                     <option value={1}>Administrador</option>
                     <option value={2}>Empleado</option>
                 </select>
                 </div>
             </div>
-
             <div className='form-row'>
                 {add && (
                 <div className='form-column-1'>
@@ -243,12 +274,24 @@ const handleForm = async (event) => {
                 <div className={add ? 'form-column-2' : 'form-column-1'}>
                 <label>Estado</label>
                 <select name='estado' value={newUser.estado} onChange={handleChange}>
-                    <option value='activo'>Activo</option>
-                    <option value='inactivo'>Inactivo</option>
+                    <option value="Activo">Activo</option>
+                    <option value="Inactivo">Inactivo</option>
                 </select>
                 </div>
             </div>
-
+            <div className='form-row'>
+                <div className='form-column-1'>
+                    <label>Email</label>
+                    <input
+                    className='search-line'
+                    type='text'
+                    placeholder={add ? 'Email...' : newUser.email}
+                    name='email'
+                    value={newUser.email}
+                    onChange={handleChange}
+                    ></input>
+                </div>
+            </div>
             <div className='form-buttons'>
                 <button
                 type='button'
@@ -267,8 +310,6 @@ const handleForm = async (event) => {
             </form>
         </div>
         )}
-
-
       </div>
     </div>
   );

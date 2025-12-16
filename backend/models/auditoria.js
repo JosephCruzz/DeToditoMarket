@@ -18,6 +18,8 @@ module.exports = function (sequelize, DataTypes) {
           model: "users",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       producto_id: {
         type: DataTypes.INTEGER,
@@ -26,8 +28,14 @@ module.exports = function (sequelize, DataTypes) {
           model: "producto",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       entrada_salida: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      descripcion: {
         type: DataTypes.STRING,
         allowNull: true,
       },

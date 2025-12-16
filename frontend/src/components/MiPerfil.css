@@ -1,0 +1,99 @@
+.perfil-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 40px auto;
+    height: auto;
+    width: 500px;
+    text-align: center;
+    border-radius: 10px;
+    border: solid #08437b;
+}
+
+.header-perfil{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 10px;
+}
+.header-perfil h1{
+    font-size: 40px;
+    margin-bottom: 20px;
+}
+
+.pefil-info-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+}
+.perfil-row{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+.perfil-row > div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.perfil-row label{
+    font-size: 20px;
+}
+.perfil-row input{
+    width: 200px;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: #f0f8ff;
+}
+.perfil-row select{
+    width: 200px;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: #f0f8ff;
+}
+.rol-label{
+    width: 200px;
+    padding: 5px 10px;
+    text-align: center;
+    border-radius: 4px;
+    background: #f0f8ff;
+}
+
+.perfil-buttons{
+    display: flex;
+    gap: 20px;
+}
+
+.perfil-buttons{
+    display: flex;
+    gap: 180px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.edit-button{
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 4px;
+    background: #b9deff;
+}
+.reset-button{
+    width: 100px;
+    height: 40px;
+    font-size: 20px;
+    border-radius: 4px;
+    background: #b9deff;
+}
+
+.edit-button:hover{
+    background: #77befb;
+}
+.reset-button:hover{
+   background: #77befb;
+}

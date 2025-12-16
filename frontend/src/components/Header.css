@@ -154,3 +154,31 @@
 .dropdown-options:hover {
     background: #75D2FF;
 }
+<<<<<<< HEAD
+=======
+
+.search-results{
+    position: absolute;
+    top: 70px;
+    width: auto;
+    border-radius: 15px;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 2000;
+}
+.search-options{
+    padding: 8px 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: black;
+    transition: background 0.3s, color 0.3s;
+    font-weight: bold;
+}
+.search-options:hover{
+    background: #75D2FF;
+}
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f

@@ -1,6 +1,10 @@
 import "./ReportesVentas.css";
 import { useState, useEffect } from "react";
 import axiosInstance from "../api/axiosInstance";
+<<<<<<< HEAD
+=======
+import { toast } from "react-toastify";
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
 
 const ReportesVentas = () => {
   const [ventas, setVentas] = useState([]);
@@ -32,7 +36,11 @@ const openAgregarVentaModal = async () => {
     setProductosDisponibles(response.data || []);
   } catch (err) {
     console.error("Error fetching productos:", err);
+<<<<<<< HEAD
     alert("No se pudieron cargar los productos");
+=======
+    toast.error("Error al conseguir los productos.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
   }
 };
 
@@ -59,9 +67,17 @@ const openAgregarVentaModal = async () => {
         setVentas(response.data.message);
       } else {
         console.error("No se encontraron facturas");
+<<<<<<< HEAD
       }
     } catch (err) {
       console.error("Error fetching ventas:", err);
+=======
+        toast.error("Error al conseguir factiras.");
+      }
+    } catch (err) {
+      console.error("Error fetching ventas:", err);
+      toast.error("Error al conseguir ventas.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     }
     setLoading(false);
   };
@@ -70,10 +86,18 @@ const openAgregarVentaModal = async () => {
 const fetchProductosDisponibles = async () => {
   try {
     const response = await axiosInstance.get("/producto/getInventory");
+<<<<<<< HEAD
     console.log("✅ Respuesta de getInventory:", response.data); // 🔹 log
     setProductosDisponibles(response.data);
   } catch (err) {
     console.error("❌ Error fetching productos:", err); // 🔹 log de error
+=======
+    console.log("Respuesta de getInventory:", response.data); 
+    setProductosDisponibles(response.data);
+  } catch (err) {
+    console.error("Error fetching productos:", err); 
+    toast.error("Error al conseguir productos.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
   }
 };
 
@@ -234,10 +258,17 @@ const fetchProductosDisponibles = async () => {
 
     resetAgregarVenta();
     fetchVentas();
+<<<<<<< HEAD
 
   } catch (err) {
     console.error("Error al guardar la venta:", err);
     alert(err.response?.data?.message || "Error al guardar la venta");
+=======
+    toast.success("Venta agregada con exito.");
+  } catch (err) {
+    console.error("Error al guardar la venta:", err);
+    toast.error("Error al agregar venta.");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
   }
 };
 
@@ -298,9 +329,16 @@ const fetchProductosDisponibles = async () => {
                   await axiosInstance.delete(`/factura/anular/${selectedFactura.numero_factura}`);
                   fetchVentas();
                   setSelectedFactura(null);
+<<<<<<< HEAD
                 } catch (err) {
                   console.error(err);
                   alert(err.response?.data.message || "Error al anular la factura");
+=======
+                  toast.success("Se anulo la factura con exito.");
+                } catch (err) {
+                  console.error(err);
+                  toast.error("Error al anular la factura");
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
                 }
               }}
               disabled={!selectedFactura}
@@ -492,4 +530,8 @@ const fetchProductosDisponibles = async () => {
   );
 };
 
+<<<<<<< HEAD
 export default ReportesVentas;
+=======
+export default ReportesVentas;
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f

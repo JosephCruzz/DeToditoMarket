@@ -16,6 +16,8 @@ module.exports = function (sequelize, DataTypes) {
           model: "producto",
           key: "id",
         },
+        onUpdate: "CASCADE",
+        onDelete: "SET NULL",
       },
       compra_id: {
         type: DataTypes.INTEGER,

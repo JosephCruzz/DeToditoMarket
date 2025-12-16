@@ -11,7 +11,8 @@ module.exports = function (sequelize, DataTypes) {
       },
       username: {
         type: DataTypes.STRING,
-        allowNull: true,
+        unique: true,
+        allowNull: false,
       },
       nombre_completo: {
         type: DataTypes.STRING,
@@ -19,7 +20,12 @@ module.exports = function (sequelize, DataTypes) {
       },
       password: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: false,
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
       },
       rol_id: {
         type: DataTypes.INTEGER,

@@ -13,15 +13,51 @@ import proveedoresIcon from '../images/ProveedoresIcon.png';
 
 const Header = () => {
 
+    const [searchText, setTextSearch] = useState("");
+    const [searchResults, setSearchResults] = useState([]);
+    const [options] = useState({
+        views: ["Productos", "Usuarios", "Proveedores", "Ventas", "Compras", "Auditoria", "Perfil"],
+        nums: [0, 1, 2, 3,4, 5, 6]
+    });
+
+
     const [reportesMenu, setReportesMenu] = useState(false);
     const [navigateView, setNavigateView] = useState(0);
     const navigate = useNavigate();
 
+<<<<<<< HEAD
     useEffect(() => {
         switch (navigateView) {
             case -1:
                 navigate("/");
                 break;
+=======
+    const handleChange = (event) =>{
+        const value = event.target.value
+        setTextSearch(value);
+
+        if(value.trim() === ""){
+            setSearchResults([]);
+            return;
+        }
+
+        const filterOptions = options.views.filter(op => op.toLowerCase().includes(value.toLowerCase()));
+
+        setSearchResults(filterOptions);
+    }
+
+    const handleSearch = (option) => {
+        const selectedOption = options.views.indexOf(option);
+        if(selectedOption !== -1){
+            setNavigateView(selectedOption);
+            setSearchResults([]);
+            setTextSearch("");
+        }
+    }
+
+    useEffect(() => {
+        switch (navigateView) {
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
             case 0:
                 navigate("/gestion/productos");
                 break;
@@ -40,16 +76,23 @@ const Header = () => {
             case 5:
                 navigate("/reportes/auditoria");
                 break;
+            case 6:
+                navigate(`/perfil/${1}`);
+                break;
             default:
                 break;
         }
     }, [navigateView, navigate]);
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
     return (
         <div>
             <div className='top-container'>
                 <div className="logo-container">
+<<<<<<< HEAD
                     <img
                         src={logo}
                         alt="Logo"
@@ -66,10 +109,41 @@ const Header = () => {
                         src={searchIcon}
                         alt='SearchIcon'
                         style={{ width: '25px', height: '25px' }}
+=======
+                    <img
+                        src={logo}
+                        alt="Logo"
+                        style={{ width: '80px', height: '80px' }}
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
                     />
                 </div>
-                <div className='profile'>
+                <div className='search-input'>
+                    <input
+                        className='search-line'
+                        type='text'
+                        placeholder='Buscar Opciones...'
+                        value={searchText}
+                        onChange={handleChange}
+                    >
+                    </input>
+                    { searchResults.length > 0 && (
+                        <div className='search-results'>
+                            {searchResults.map((option, index) => (
+                                <label className='search-options' key={index} onClick={() => handleSearch(option)}>{option}</label>
+                            ))}
+                        </div>
+                    )}
                     <img
+<<<<<<< HEAD
+=======
+                        src={searchIcon}
+                        alt='SearchIcon'
+                        style={{ width: '25px', height: '25px' }}
+                    />
+                </div>
+                <div className='profile' onClick={() => setNavigateView(6)}>
+                    <img 
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
                         src={userIcon}
                         alt='userIcon'
                         style={{ width: '40px', height: '40px' }}

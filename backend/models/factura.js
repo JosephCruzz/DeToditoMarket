@@ -5,7 +5,7 @@ module.exports = function(sequelize, DataTypes) {
       type: DataTypes.INTEGER,
       allowNull: false,
       primaryKey: true,
-      autoIncrement: true
+      autoIncrement: true //se agrego autoincrement, si esto estaba mal me avisan!
     },
     cai_id: {
       type: DataTypes.INTEGER,
@@ -88,10 +88,18 @@ module.exports = function(sequelize, DataTypes) {
       allowNull: true
     },
     estado: {
+<<<<<<< HEAD
       type: DataTypes.ENUM('VIGENTE', 'ANULADA'),
       allowNull: false,
       defaultValue: 'VIGENTE'
     },
+=======
+  type: DataTypes.ENUM('VIGENTE', 'ANULADA'),
+  allowNull: false,
+  defaultValue: 'VIGENTE'
+},
+
+>>>>>>> b2066ca774c1c4978cd3b74c5045aa867b7aa76f
   }, {
     sequelize,
     tableName: 'factura',
