@@ -1,3 +1,5 @@
+<<<<<<< HEAD
+=======
 /**
  * @swagger
  * tags:
@@ -88,6 +90,7 @@
  *         description: Error en servidor
  */
 
+>>>>>>> develop
 const express = require("express");
 const router = express.Router();
 const productoController = require("../controllers/productoController");

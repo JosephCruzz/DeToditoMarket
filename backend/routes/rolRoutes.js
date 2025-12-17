@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const rolesController = require("../controllers/rolController");
 
+<<<<<<< HEAD
+=======
 /**
  * @swagger
  * components:
@@ -239,9 +241,14 @@ const rolesController = require("../controllers/rolController");
  */
 
 
+>>>>>>> develop
 router.post("/crear", rolesController.addRole);
 router.get("/:id", rolesController.getRole);
 router.put("/:id", rolesController.updateRole);
 router.delete("/:id", rolesController.deleteRole);
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> develop

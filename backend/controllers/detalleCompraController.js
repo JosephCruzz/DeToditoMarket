@@ -58,6 +58,33 @@ exports.addDetalleCompra = async (req, res) => {
       error: err.message,
     });
   }
+<<<<<<< HEAD
+<<<<<<<< HEAD:backend/controllers/detalleCompraController.js
+};
+========
+};
+exports.getDetalleCompra = async (req,res) => {
+  try{
+    const getDC = await detalleCompra.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    if(getDC.length === 0){
+      return res.status(404).json({
+        message: "No se encontraron detalles de compra en la base de datos"
+      });
+    }
+
+    return res.status(200).json(getDC);
+  }catch (e) {
+    return res.status(500).json({
+      message: "No se pudo obtener los datos",
+      error: e.message
+    });
+  }
+}
+>>>>>>>> develop:controllers/detalleCompra.js
+=======
 };
 
 // Agregar multiples detalles de compra
@@ -75,3 +102,4 @@ exports.addDetalleCompraBulk = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+>>>>>>> develop

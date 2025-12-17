@@ -3,6 +3,41 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
 
 const GestionUsuarios = () => {
+<<<<<<< HEAD
+    
+    const [formVisible, setFormVisible] = useState(false);
+    const [add, setAdd] = useState(false);
+    const [users, setUsers] = useState([]);
+    const [userToEdit, setUserToEdit] = useState(null);
+
+    useEffect(() => {   
+        axiosInstance.get('user/getUsers')
+        .then(response => {
+            setUsers(response.data);
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error('There was an error!', error);
+        });     
+    }, []);
+
+    const openFormAdd = () => {
+        setFormVisible(true);
+        setAdd(true);
+        setUserToEdit(null);
+    }
+
+    const openFormEdit = (user) => {
+        setFormVisible(true);
+        setAdd(false);
+        setUserToEdit(user);
+    }
+
+    const closeForm = () => {
+        setFormVisible(false);
+        setAdd(false);
+    }
+=======
   const [formVisible, setFormVisible] = useState(false);
   const [add, setAdd] = useState(false);
   const [users, setUsers] = useState([]);
@@ -113,6 +148,7 @@ const handleForm = async (event) => {
       console.log(error);
     }
   };
+>>>>>>> develop
 
     const Icon = {
         Search: (props) => (
@@ -317,6 +353,10 @@ const handleForm = async (event) => {
         </div>
     )
 }
+<<<<<<< HEAD
+
+export default GestionUsuarios;
+=======
   const Icon = {
     Edit: (props) => (
       <svg viewBox="0 0 24 24" className={"w-5 h-5 " + (props.className || "")}>
@@ -478,3 +518,4 @@ const handleForm = async (event) => {
 };
 
 export default GestionUsuarios;
+>>>>>>> develop

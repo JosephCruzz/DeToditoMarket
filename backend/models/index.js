@@ -45,6 +45,10 @@ db.DetalleVenta.belongsTo(db.producto, { foreignKey: "producto_id", as: "product
 db.producto.hasMany(db.DetalleVenta, { foreignKey: "producto_id", as: "detalleVentas" });
 
 
+<<<<<<< HEAD
+
+db.sequelize = sequelize;
+=======
 //mas errores de asociacion
 db.compras.belongsTo(db.proveedores, { foreignKey: "proveedor_id", as: "proveedor" });
 db.compras.belongsTo(db.users, { foreignKey: "user_id", as: "user" });
@@ -63,6 +67,7 @@ db.auditoria.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" 
 db.producto.hasMany(db.auditoria, { foreignKey: "producto_id", as: "auditorias" });
 
 
+>>>>>>> develop
 db.Sequelize = Sequelize;
 
 module.exports = db;

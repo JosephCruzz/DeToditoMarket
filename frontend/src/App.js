@@ -5,10 +5,16 @@ import Header from './components/Header.jsx';
 import GestionProductos from './components/GestionProductos.jsx';
 import GestionUsuarios from './components/GestionUsuarios.jsx';
 import GestionProveedores from './components/GestionProveedores.jsx';
+<<<<<<< HEAD
+import ReportesVentas from './components/ReportesVentas.jsx';
+import ReportesCompras from './components/ReportesCompras.jsx';
+import Auditoria from './components/Auditoria.jsx';
+=======
 import Auditoria from './components/Auditoria.jsx';
 import ReportesVentas from './components/ReportesVentas.jsx';
 import ReportesCompras from './components/ReportesCompras.jsx';
 
+>>>>>>> develop
 
 function App() {
   
@@ -21,9 +27,15 @@ function App() {
           <Route path="/gestion/productos" element={<GestionProductos/>}/>
           <Route path="/gestion/usuarios" element={<GestionUsuarios/>}/>
           <Route path="/gestion/proveedores" element={<GestionProveedores/>}/>
+<<<<<<< HEAD
+          <Route path="/reportes/ventas" element={<ReportesVentas/>}/>
+          <Route path="/reportes/compras" element={<ReportesCompras/>}/>
+          <Route path="/reportes/auditoria" element={<Auditoria/>}/>
+=======
           <Route path="/reportes/auditoria" element={<Auditoria/>}/> 
           <Route path="/reportes/ventas" element={<ReportesVentas/>}/> 
           <Route path="/reportes/compras" element={<ReportesCompras/>}/> 
+>>>>>>> develop
         </Routes>
       </Container>
     </Router>

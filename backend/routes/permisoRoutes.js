@@ -1,5 +1,10 @@
 const express = require("express");
 const router = express.Router();
+<<<<<<< HEAD
+
+const permisosController = require("../controllers/permisoController");
+
+=======
 const permisosController = require("../controllers/permisoController");
 
 /**
@@ -154,9 +159,14 @@ const permisosController = require("../controllers/permisoController");
  *         description: Error interno del servidor
  */
 
+>>>>>>> develop
 router.post("/crear", permisosController.addPermiso);
 router.get("/:id", permisosController.getPermisoById);
 router.put("/:id", permisosController.updatePermiso);
 router.delete("/:id", permisosController.deletePermiso);
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> develop
