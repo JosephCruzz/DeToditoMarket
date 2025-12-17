@@ -58,4 +58,48 @@ exports.addDetalleCompra = async (req, res) => {
       error: err.message,
     });
   }
+<<<<<<< HEAD
+<<<<<<<< HEAD:backend/controllers/detalleCompraController.js
 };
+========
+};
+exports.getDetalleCompra = async (req,res) => {
+  try{
+    const getDC = await detalleCompra.findAll({
+      order: [["id", "ASC"]],
+    });
+
+    if(getDC.length === 0){
+      return res.status(404).json({
+        message: "No se encontraron detalles de compra en la base de datos"
+      });
+    }
+
+    return res.status(200).json(getDC);
+  }catch (e) {
+    return res.status(500).json({
+      message: "No se pudo obtener los datos",
+      error: e.message
+    });
+  }
+}
+>>>>>>>> develop:controllers/detalleCompra.js
+=======
+};
+
+// Agregar multiples detalles de compra
+exports.addDetalleCompraBulk = async (req, res) => {
+  try {
+    const detalles = req.body;
+    if (!Array.isArray(detalles)) {
+      return res.status(400).json({ error: "Se esperaba un array de detalles" });
+    }
+
+    const created = await detalleCompra.bulkCreate(detalles);
+    res.status(201).json(created);
+  } catch (err) {
+    console.error("Error bulkCreate detalles:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+>>>>>>> develop

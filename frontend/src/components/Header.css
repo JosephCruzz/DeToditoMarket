@@ -76,6 +76,7 @@
     align-items: flex-start;
 }
 
+<<<<<<< HEAD
 .username {
     font-weight: 600;
     font-size: 14px;
@@ -135,6 +136,37 @@
     left: 0;
     width: 200px;
     background-color: white;
+=======
+.username{
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.user-role{
+    font-size: 10px;
+}
+
+.options{
+    display: flex;
+    width: fit-content;
+    align-items: center;
+    gap: 10px;
+    position: relative;
+}
+
+.options:hover{
+    background: #f0833e;
+}
+
+.dropdown-reportes {
+    position: absolute;
+    top: 50px;
+    left: 80%;
+    transform: translateX(-50%);
+    width: 200px;
+    background-color: white;
+    color: black;
+>>>>>>> develop
     border-radius: 15px;
     box-shadow: 5px 5px 10px rgba(0,0,0,0.15);
     padding: 10px;
@@ -142,8 +174,13 @@
     flex-direction: column;
     gap: 10px;
     z-index: 1000;
+<<<<<<< HEAD
 }
 
+=======
+    border: 2px solid #2b6daf;
+}
+>>>>>>> develop
 .dropdown-options {
     padding: 8px 12px;
     border-radius: 8px;
@@ -154,3 +191,7 @@
 .dropdown-options:hover {
     background: #75D2FF;
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop

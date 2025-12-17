@@ -1,54 +1,89 @@
 const express = require("express");
+const cors = require("cors");
 const app = express();
-const models = require("./models");
+var logger = require('morgan');
+var path = require('path');
+var cookieParser = require('cookie-parser');
 const sequelize = require("./config/database");
-const comprasRoutes = require("./routes/comprasRoutes");
-const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
-const notificacionesRoutes = require("./routes/notificaciones");
-const rolesRoutes = require("./routes/roles");
-const permisosRoutes = require("./routes/permisos");
-const comprobantesRoutes = require("./routes/comprobantes");
-const auditoriaRoutes = require("./routes/auditoria");
+const userRoute = require("./routes/userRoutes");
+const productoRoute = require("./routes/productoRoutes");
+const cajaRoute = require("./routes/cajaRoutes");
+const proveedorRoute = require("./routes/proveedorRoutes");
+const auditRoute = require("./routes/auditoriaRoutes");
+const caiRoute = require("./routes/caiRoutes");
+const compraRoute = require("./routes/comprasRoutes");
+const detalleCompraRoute = require("./routes/detalleCompraRoutes");
+const comprobanteRoute = require("./routes/comprobanteRoutes");
+const facturaRoute = require("./routes/facturaRoutes");
+const detalleVentaRoute = require("./routes/detalleVentaRoutes");
+const permisoRoute = require("./routes/permisoRoutes");
+const rolRoute = require("./routes/rolRoutes");
 
+var swaggerJsDoc = require('swagger-jsdoc');
+var swaggerUI = require('swagger-ui-express');
 
 // Middleware
+app.use(cors());
+app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
 
-/*cambio a un codigo mas entendible tambien eliminamos sync ya que no se usa
-cuando usamos migrations */
+app.use("/api/user", userRoute);
+app.use("/api/proveedor", proveedorRoute);
+app.use("/api/producto", productoRoute);
+app.use("/api/audit", auditRoute);
+app.use("/api/caja", cajaRoute);
+app.use("/api/cai", caiRoute);
+app.use("/api/compra", compraRoute);
+app.use("/api/detalleCompra", detalleCompraRoute);
+app.use("/api/comprobante", comprobanteRoute);
+app.use("/api/factura", facturaRoute);
+app.use("/api/detalleVenta", detalleVentaRoute);
+app.use("/api/permiso", permisoRoute);
+app.use("/api/rol", rolRoute);
 
-async function authenticateDB() {
-  try {
-    await sequelize.authenticate();
-    console.log("Conectado a la base de datos");
-    app.listen(3000, () => {
-      console.log("Servidor corriendo en puerto 3000");
-    });
-  } catch (errr) {
-    console.error("se encontro un error: ", errr);
-    process.exit(1);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+app.get("/", (req, res) => {
+  res.send("La API esta corriendo..");
+});
+
+const options = {
+  definition: {
+    openapi:"3.0.3",
+    info: {
+      title: "Detodito Market Api Documentation",
+      version: "1.0",
+  } ,
+  servers: [
+    {
+      url: "http://localhost:3001",
+    }
+  ],
+  components: {
+    schemas: {}
   }
-}
+},
+  apis: ["./routes/*.js"] 
+} 
 
-authenticateDB();
+const specs = swaggerJsDoc(options)
+app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(specs))
 
-/*req es request
-pide algo del front end
+sequelize
+  .authenticate()
+  .then(() => {
+    console.log("Conectado a la base de datos Postgre de Supabase de Detodito Market");
+    return sequelize.sync({alter: true});
+  })
+  .then(() => {
+    console.log("Modelos vinculados");
+    console.log("Swagger corriendo en http://localhost:3001/api-docs/");
+  })
+  .catch((err) => console.error("DB error:", err));
+app.listen(3001, () => console.log("Listening to port 3001"));
 
- y el res es response
-  (manda eso al front end o quien pidio / 
- osea entro a la pagina principal)
-*/
-
-app.use("/compra", comprasRoutes);
-app.use("/detalleCompra", detalleCompraRoutes);
-app.use("/notifications", notificacionesRoutes);
-app.use("/roles", rolesRoutes);
-app.use("/permisos", permisosRoutes);
-app.use("/comprobantes", comprobantesRoutes);
-app.use("/auditoria", auditoriaRoutes);
-
-
-app.get("/ping", (req, res) => res.send("pong"));
-
+//Sincronizar la Base de Datos
