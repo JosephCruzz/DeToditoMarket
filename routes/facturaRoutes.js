@@ -1,6 +1,6 @@
 const express = require("express");
 const routes = express.Router();
-const facturaC = require("../controllers/factura");
+const facturaC = require("../controllers/facturaController");
 
 /**
  * @swagger
