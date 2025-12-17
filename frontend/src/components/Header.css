@@ -76,67 +76,6 @@
     align-items: flex-start;
 }
 
-<<<<<<< HEAD
-.username {
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-}
-
-.user-role {
-    font-size: 10px;
-    color: #777;
-    font-style: italic;
-}
-
-
-/* CONTAINER ABAJO */
-.bottom-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background-color: #08437b;
-    padding: 10px 15px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 999;
-}
-
-/* OPCIONES */
-.bottom-container .options {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 20px;
-    background-color: #DBF3FF;
-    border-radius: 25px;
-    color: #000;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-    position: relative;
-}
-
-.bottom-container .options img {
-    width: 30px;
-    height: 30px;
-}
-
-.bottom-container .options:hover {
-    background-color: #82baee;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 10px rgba(0,0,0,0.2);
-}
-
-/* DROPDOWN REPORTES */
-.dropdown-reportes {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 200px;
-    background-color: white;
-=======
 .username{
     font-size: 14px;
     font-weight: bold;
@@ -166,7 +105,6 @@
     width: 200px;
     background-color: white;
     color: black;
->>>>>>> develop
     border-radius: 15px;
     box-shadow: 5px 5px 10px rgba(0,0,0,0.15);
     padding: 10px;
@@ -174,13 +112,8 @@
     flex-direction: column;
     gap: 10px;
     z-index: 1000;
-<<<<<<< HEAD
-}
-
-=======
     border: 2px solid #2b6daf;
 }
->>>>>>> develop
 .dropdown-options {
     padding: 8px 12px;
     border-radius: 8px;
@@ -191,7 +124,3 @@
 .dropdown-options:hover {
     background: #75D2FF;
 }
-<<<<<<< HEAD
-=======
-
->>>>>>> develop
