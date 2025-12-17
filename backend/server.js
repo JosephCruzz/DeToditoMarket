@@ -2,10 +2,16 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 <<<<<<< HEAD
+var logger = require('morgan');
+var path = require('path');
+var cookieParser = require('cookie-parser');
+=======
+<<<<<<< HEAD
 =======
 var logger = require('morgan');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+>>>>>>> develop
 >>>>>>> develop
 const sequelize = require("./config/database");
 const userRoute = require("./routes/userRoutes");
@@ -18,15 +24,26 @@ const compraRoute = require("./routes/comprasRoutes");
 const detalleCompraRoute = require("./routes/detalleCompraRoutes");
 const comprobanteRoute = require("./routes/comprobanteRoutes");
 const facturaRoute = require("./routes/facturaRoutes");
-const detalleVentaRoute = require("./routes/detalleVentaRoutes");
+const detalleVentaRoute = require("./routes/detalleDeVentaRoutes");
 const permisoRoute = require("./routes/permisoRoutes");
 const rolRoute = require("./routes/rolRoutes");
 
 <<<<<<< HEAD
+var swaggerJsDoc = require('swagger-jsdoc');
+var swaggerUI = require('swagger-ui-express');
+=======
+<<<<<<< HEAD
+>>>>>>> develop
 
 // Middleware
 app.use(cors());
+app.use(logger('dev'));
 app.use(express.json());
+<<<<<<< HEAD
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public')));
+=======
 app.use(express.urlencoded({ extended: true }));
 =======
 var swaggerJsDoc = require('swagger-jsdoc');
@@ -39,6 +56,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+>>>>>>> develop
 >>>>>>> develop
 
 app.use("/api/user", userRoute);
@@ -56,10 +74,16 @@ app.use("/api/permiso", permisoRoute);
 app.use("/api/rol", rolRoute);
 
 <<<<<<< HEAD
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+=======
+<<<<<<< HEAD
 =======
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
+>>>>>>> develop
 >>>>>>> develop
 app.get("/", (req, res) => {
   res.send("La API esta corriendo..");
@@ -67,6 +91,9 @@ app.get("/", (req, res) => {
 
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
+>>>>>>> develop
 const options = {
   definition: {
     openapi:"3.0.3",
@@ -88,6 +115,9 @@ const options = {
 
 const specs = swaggerJsDoc(options)
 app.use("/api-docs",swaggerUI.serve,swaggerUI.setup(specs))
+<<<<<<< HEAD
+=======
+>>>>>>> develop
 >>>>>>> develop
 
 sequelize
@@ -99,8 +129,12 @@ sequelize
   .then(() => {
     console.log("Modelos vinculados");
 <<<<<<< HEAD
+    console.log("Swagger corriendo en http://localhost:3001/api-docs/");
+=======
+<<<<<<< HEAD
 =======
     console.log("Swagger corriendo en http://localhost:3001/api-docs/");
+>>>>>>> develop
 >>>>>>> develop
   })
   .catch((err) => console.error("DB error:", err));

@@ -1,8 +1,11 @@
 const controllersCai = require("../controllers/caiController")
 
 const express = require("express");
-const Routes = express.Router();
+const routes = express.Router();
 
-Routes.post("/crear",controllersCai.addCai);
+routes.post("/crear",controllersCai.addCai);
+routes.get("/",controllersCai.getCai);
+routes.put("/:id",controllersCai.editCai);
+routes.delete("/eliminar/:id",controllersCai.deleteCai);
 
-module.exports = Routes;
+module.exports = routes;

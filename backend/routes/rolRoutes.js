@@ -4,6 +4,9 @@ const rolesController = require("../controllers/rolController");
 
 <<<<<<< HEAD
 =======
+<<<<<<< HEAD
+=======
+>>>>>>> develop
 /**
  * @swagger
  * components:
@@ -241,6 +244,9 @@ const rolesController = require("../controllers/rolController");
  */
 
 
+<<<<<<< HEAD
+=======
+>>>>>>> develop
 >>>>>>> develop
 router.post("/crear", rolesController.addRole);
 router.get("/:id", rolesController.getRole);
@@ -250,5 +256,9 @@ router.delete("/:id", rolesController.deleteRole);
 <<<<<<< HEAD
 module.exports = router;
 =======
+<<<<<<< HEAD
 module.exports = router;
+=======
+module.exports = router;
+>>>>>>> develop
 >>>>>>> develop

@@ -59,9 +59,28 @@ exports.addDetalleCompra = async (req, res) => {
     });
   }
 <<<<<<< HEAD
+};
+
+// Agregar multiples detalles de compra
+exports.addDetalleCompraBulk = async (req, res) => {
+  try {
+    const detalles = req.body;
+    if (!Array.isArray(detalles)) {
+      return res.status(400).json({ error: "Se esperaba un array de detalles" });
+    }
+
+    const created = await detalleCompra.bulkCreate(detalles);
+    res.status(201).json(created);
+  } catch (err) {
+    console.error("Error bulkCreate detalles:", err);
+    res.status(500).json({ error: err.message });
+  }
+=======
+<<<<<<< HEAD
 <<<<<<<< HEAD:backend/controllers/detalleCompraController.js
 };
 ========
+>>>>>>> develop
 };
 exports.getDetalleCompra = async (req,res) => {
   try{
@@ -83,6 +102,8 @@ exports.getDetalleCompra = async (req,res) => {
     });
   }
 }
+<<<<<<< HEAD
+=======
 >>>>>>>> develop:controllers/detalleCompra.js
 =======
 };
@@ -102,4 +123,5 @@ exports.addDetalleCompraBulk = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+>>>>>>> develop
 >>>>>>> develop

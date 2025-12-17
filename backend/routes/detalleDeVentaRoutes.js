@@ -1,7 +1,13 @@
 const express = require("express");
 const routes = express.Router();
+const detalleDeVentaC = require("../controllers/detalleVentaController");
 
-const detalleDeVentaC = require("../controllers/detalleDeVenta");
+/**
+ * @swagger
+ * tags:
+ *   name: DetalleVenta
+ *   description: Gestión de detalles de venta
+ */
 
 /**
  * @swagger
@@ -85,6 +91,36 @@ const detalleDeVentaC = require("../controllers/detalleDeVenta");
 
 /**
  * @swagger
+ * /detalleDeVenta:
+ *   get:
+ *     summary: Obtener todos los detalles de venta
+ *     tags: [DetalleVenta]
+ *     responses:
+ *       200:
+ *         description: Lista de detalles de ventas obtenida exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: Success
+ *                 message:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/DetalleVenta'
+ *       404:
+ *         description: No se encontraron detalles de ventas
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
+ */
+routes.get("/", detalleDeVentaC.getDetalleVenta);
+
+/**
+ * @swagger
  * /detalleDeVenta/crear:
  *   post:
  *     summary: Crear un nuevo detalle de venta
@@ -108,66 +144,8 @@ const detalleDeVentaC = require("../controllers/detalleDeVenta");
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *             examples:
- *               campoVacio:
- *                 value:
- *                   status: Error
- *                   message: El campo factura_id no puede estar vacio
- *               tipoIncorrecto:
- *                 value:
- *                   status: Error
- *                   message: cantidad tiene que ser de tipo number
- *               claveForanea:
- *                 value:
- *                   status: Error
- *                   message: numero de factura y/o numero de numero de producto no es existente.
- *       500:
- *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
  */
 routes.post("/crear", detalleDeVentaC.addDetalleVenta);
-
-/**
- * @swagger
- * /detalleDeVenta/:
- *   get:
- *     summary: Obtener todos los detalles de ventas
- *     tags: [DetalleVenta]
- *     responses:
- *       200:
- *         description: Lista de detalles de ventas obtenida exitosamente
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: Success
- *                 message:
- *                   type: array
- *                   items:
- *                     $ref: '#/components/schemas/DetalleVenta'
- *       404:
- *         description: No se encontraron detalles de ventas
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *             example:
- *               status: Error
- *               message: No se encontro detalles de ventas.
- *       500:
- *         description: Error interno del servidor
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- */
-routes.get("/", detalleDeVentaC.getDetalleVenta);
 
 /**
  * @swagger
@@ -201,30 +179,8 @@ routes.get("/", detalleDeVentaC.getDetalleVenta);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *             examples:
- *               sinId:
- *                 value:
- *                   status: Error
- *                   message: Debe ingresar el número de identificación
- *               campoVacio:
- *                 value:
- *                   status: Error
- *                   message: El campofactura_id esta vacio
- *               tipoIncorrecto:
- *                 value:
- *                   status: Error
- *                   message: "El campo cantidad deberia ser de tipo: number"
  *       404:
  *         description: No se encontró el detalle de venta con ese ID
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Error'
- *             example:
- *               status: Error
- *               message: No se encontró ese número de identificación
- *       500:
- *         description: Error interno del servidor
  *         content:
  *           application/json:
  *             schema:
@@ -251,39 +207,50 @@ routes.put("/editar/:id", detalleDeVentaC.editDetalleVenta);
  *         content:
  *           application/json:
  *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: string
- *                   example: Success
- *                 message:
- *                   type: string
- *                   example: Se eliminó exitosamente la Venta
+ *               $ref: '#/components/schemas/Success'
  *       400:
  *         description: No se pudo eliminar la venta
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *             example:
- *               status: Error
- *               message: No se pudo eliminar la venta.
  *       404:
  *         description: No se encontró el detalle de venta
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
- *             example:
- *               status: Error
- *               message: No se pudo encontrar esa venta.
- *       500:
- *         description: Error interno del servidor
+ */
+routes.delete("/eliminar/:id", detalleDeVentaC.deleteDetalleVenta);
+
+/**
+ * @swagger
+ * /detalleDeVenta/bulk:
+ *   post:
+ *     summary: Agregar múltiples detalles de venta a la vez
+ *     tags: [DetalleVenta]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: array
+ *             items:
+ *               $ref: '#/components/schemas/DetalleVenta'
+ *     responses:
+ *       201:
+ *         description: Detalles de venta creados exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Success'
+ *       400:
+ *         description: Error en validación de alguno de los detalles
  *         content:
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-routes.delete("/eliminar/:id", detalleDeVentaC.deleteDetalleVenta);
+routes.post("/bulk", detalleDeVentaC.addDetalleVentaBulk);
 
 module.exports = routes;

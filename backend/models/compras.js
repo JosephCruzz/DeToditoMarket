@@ -1,7 +1,12 @@
 <<<<<<< HEAD
+//aqui se elimino una columna de fecha que estaba dando error
+
+=======
+<<<<<<< HEAD
 =======
 //aqui se elimino una columna de fecha que estaba dando error
 
+>>>>>>> develop
 >>>>>>> develop
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
