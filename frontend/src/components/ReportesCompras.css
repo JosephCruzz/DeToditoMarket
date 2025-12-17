@@ -1,0 +1,332 @@
+/* CONTENEDOR GENERAL */
+.reportes-outer {
+  display: flex;
+  justify-content: center;
+  padding: 30px;
+  background: #f4f4f4;
+}
+
+.reportes-card {
+  background: white;
+  width: 95%;
+  max-width: 1400px;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  font-family: "Poppins", sans-serif;
+}
+
+.reportes-title {
+  font-size: 28px;
+  margin-bottom: 20px;
+  color: #2b2b2b;
+}
+
+/* FILTROS */
+.filter-bar.real-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.filter-group label {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #444;
+}
+
+.filter-group input[type="date"],
+.filter-group select,
+.search-input,
+.input-fecha {
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  min-width: 140px;
+}
+
+.filter-group input[type="date"]:focus,
+.filter-group select:focus,
+.search-input:focus,
+.input-fecha:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* BOTONES */
+.btn-gray {
+  padding: 8px 15px;
+  background: #e0e0e0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.btn-gray:hover {
+  background: #d4d4d4;
+}
+
+.btn-add,
+.btn-add-venta {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+  margin-left: auto;
+}
+
+.btn-add:hover,
+.btn-add-venta:hover {
+  background-color: #0066d6;
+}
+
+.btn-eliminar {
+  background-color: #ff4d4f;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-eliminar:hover {
+  background-color: #e63939;
+}
+
+.btn-agregar-producto {
+  background-color: #1890ff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-agregar-producto:hover {
+  background-color: #1470c1;
+}
+
+/* TABLA */
+.reportes-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 800px;
+}
+
+.reportes-table th,
+.reportes-table td {
+  padding: 12px 10px;
+  text-align: left;
+  font-size: 14px;
+  border-bottom: 1px solid #eee;
+}
+
+.reportes-table thead {
+  background: #f8f8f8;
+}
+
+.reportes-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.reportes-table tbody tr:hover {
+  background: #eef7ff;
+}
+
+/* MODAL */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  position: relative;
+  overflow-y: auto;
+  overflow-x: visible;
+  background: #ffffff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  max-width: 750px;
+  width: 90%;
+  max-height: 85%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+  font-family: "Poppins", sans-serif;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal-content h2,
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #222;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  transition: border 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* PRODUCTOS EN MODAL */
+.producto-row {
+  position: relative;
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr auto;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 8px;
+  background: #f9f9f9;
+  border-radius: 10px;
+}
+
+.producto-row input[type="text"],
+.producto-row input[type="number"],
+.producto-row select {
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.lista-productos {
+  max-height: 150px;
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 4px;
+  z-index: 10;
+}
+
+.item-producto {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.item-producto:hover {
+  background-color: #f0f0f0;
+}
+
+.total-compra {
+  font-weight: 600;
+  font-size: 16px;
+  text-align: right;
+  margin-top: 10px;
+  color: #222;
+}
+
+/* MODAL ACTIONS */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.modal-actions .btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-actions .btn-cancel:hover {
+  background-color: #d4d4d4;
+}
+
+.modal-actions .btn-guardar {
+  background-color: #52c41a;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.modal-actions .btn-guardar:hover {
+  background-color: #389e0d;
+}
+
+.estado {
+  padding: 4px 10px;
+  border-radius: 15px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.estado.success {
+  background: #e6ffe9;
+  color: #2e9d40;
+}
+
+.estado.cancel {
+  background: #ffe6e6;
+  color: #cc3b3b;
+}
+
+.proveedor-column {
+  font-weight: 600;
+}
+
+.proveedor-id {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}

@@ -37,7 +37,32 @@ Object.keys(db).forEach(modelName => {
   }
 });
 
-db.sequelize = sequelize;
+//SALIA ERROR DE ASOCIACION
+db.factura.hasMany(db.DetalleVenta, { foreignKey: "factura_id", as: "detalle" });
+db.DetalleVenta.belongsTo(db.factura, { foreignKey: "factura_id", as: "factura" });
+
+db.DetalleVenta.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
+db.producto.hasMany(db.DetalleVenta, { foreignKey: "producto_id", as: "detalleVentas" });
+
+
+//mas errores de asociacion
+db.compras.belongsTo(db.proveedores, { foreignKey: "proveedor_id", as: "proveedor" });
+db.compras.belongsTo(db.users, { foreignKey: "user_id", as: "user" });
+
+db.compras.hasMany(db.detalleCompra, { foreignKey: "compra_id", as: "detalleCompra" });
+db.detalleCompra.belongsTo(db.compras, { foreignKey: "compra_id", as: "compra" });
+
+db.detalleCompra.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
+db.producto.hasMany(db.detalleCompra, { foreignKey: "producto_id", as: "detalleCompra" });
+
+// AUDITORIA
+db.auditoria.belongsTo(db.users, { foreignKey: "user_id", as: "usuario" });
+db.users.hasMany(db.auditoria, { foreignKey: "user_id", as: "auditorias" });
+
+db.auditoria.belongsTo(db.producto, { foreignKey: "producto_id", as: "producto" });
+db.producto.hasMany(db.auditoria, { foreignKey: "producto_id", as: "auditorias" });
+
+
 db.Sequelize = Sequelize;
 
 module.exports = db;

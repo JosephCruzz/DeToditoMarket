@@ -1,0 +1,54 @@
+const express = require("express");
+const app = express();
+const models = require("./models");
+const sequelize = require("./config/database");
+const comprasRoutes = require("./routes/comprasRoutes");
+const detalleCompraRoutes = require("./routes/detalleCompraRoutes");
+const notificacionesRoutes = require("./routes/notificaciones");
+const rolesRoutes = require("./routes/roles");
+const permisosRoutes = require("./routes/permisos");
+const comprobantesRoutes = require("./routes/comprobantes");
+const auditoriaRoutes = require("./routes/auditoria");
+
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+/*cambio a un codigo mas entendible tambien eliminamos sync ya que no se usa
+cuando usamos migrations */
+
+async function authenticateDB() {
+  try {
+    await sequelize.authenticate();
+    console.log("Conectado a la base de datos");
+    app.listen(3000, () => {
+      console.log("Servidor corriendo en puerto 3000");
+    });
+  } catch (errr) {
+    console.error("se encontro un error: ", errr);
+    process.exit(1);
+  }
+}
+
+authenticateDB();
+
+/*req es request
+pide algo del front end
+
+ y el res es response
+  (manda eso al front end o quien pidio / 
+ osea entro a la pagina principal)
+*/
+
+app.use("/compra", comprasRoutes);
+app.use("/detalleCompra", detalleCompraRoutes);
+app.use("/notifications", notificacionesRoutes);
+app.use("/roles", rolesRoutes);
+app.use("/permisos", permisosRoutes);
+app.use("/comprobantes", comprobantesRoutes);
+app.use("/auditoria", auditoriaRoutes);
+
+
+app.get("/ping", (req, res) => res.send("pong"));
+
