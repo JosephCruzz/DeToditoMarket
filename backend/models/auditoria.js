@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+//se elimino fecha
+
+>>>>>>> develop
 const Sequelize = require("sequelize");
 module.exports = function (sequelize, DataTypes) {
   return sequelize.define(
@@ -29,16 +34,25 @@ module.exports = function (sequelize, DataTypes) {
         type: DataTypes.STRING,
         allowNull: true,
       },
+<<<<<<< HEAD
       fecha: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW
       },
+=======
+>>>>>>> develop
     },
     {
       sequelize,
       tableName: "auditoria",
       schema: "public",
+<<<<<<< HEAD
       timestamps: false,
+=======
+      timestamps: true,
+      createdAt: "created_at",
+      updatedAt: false,
+>>>>>>> develop
       indexes: [
         {
           name: "auditoria_pkey",

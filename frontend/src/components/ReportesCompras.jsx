@@ -1,3 +1,230 @@
+<<<<<<< HEAD
+import "./ReportesCompras.css";
+import { useEffect, useState } from "react";
+import axiosInstance from "../api/axiosInstance";
+=======
+<<<<<<< HEAD
+import './ReportesCompras.css';
+import { useState, useEffect } from 'react';
+import axiosInstance from '../api/axiosInstance';
+>>>>>>> develop
+
+const ReportesCompras = () => {
+  const [compras, setCompras] = useState([]);
+  const [proveedores, setProveedores] = useState([]);
+  const [productosDisponibles, setProductosDisponibles] = useState([]);
+
+  // FILTROS
+  const [searchText, setSearchText] = useState("");
+  const [filtroEstado, setFiltroEstado] = useState("TODOS");
+  const [fechaInicio, setFechaInicio] = useState("");
+  const [fechaFin, setFechaFin] = useState("");
+
+  // MODAL
+  const [showAgregarCompra, setShowAgregarCompra] = useState(false);
+  const [proveedorCompra, setProveedorCompra] = useState({ id: "", nombre: "", mostrarDropdown: false });
+  const [productosCompra, setProductosCompra] = useState([]);
+
+  const [showDetalleModal, setShowDetalleModal] = useState(false);
+  const [selectedCompra, setSelectedCompra] = useState(null); 
+
+
+  // FETCH
+  useEffect(() => {
+    fetchCompras();
+    fetchProveedores();
+    fetchProductos();
+  }, []);
+
+  const fetchCompras = async () => {
+    try {
+      const res = await axiosInstance.get("/compra/");
+      setCompras(res.data || []);
+    } catch (err) {
+      console.error("Error compras:", err);
+    }
+  };
+
+  const fetchProveedores = async () => {
+    try {
+      const res = await axiosInstance.get("/proveedor/getSuppliers");
+      setProveedores(res.data || []);
+    } catch (err) {
+      console.error("Error proveedores:", err);
+    }
+  };
+
+  const fetchProductos = async () => {
+    try {
+      const res = await axiosInstance.get("/producto/getInventory");
+      setProductosDisponibles(res.data || []);
+    } catch (err) {
+      console.error("Error productos:", err);
+    }
+  };
+
+  // FILTROS
+  const comprasFiltradas = compras.filter((c) => {
+    const fecha = new Date(c.fecha_creacion);
+    const search = searchText.toLowerCase();
+
+    const matchText =
+      c.id.toString().includes(search) ||
+      c.proveedor?.nombre?.toLowerCase().includes(search) ||
+      c.user?.nombre_completo?.toLowerCase().includes(search);
+
+    let matchEstado = true;
+    if (filtroEstado !== "TODOS") {
+      matchEstado = c.estado?.toLowerCase() === filtroEstado.toLowerCase();
+    }
+
+    const matchFechaInicio = !fechaInicio || fecha >= new Date(fechaInicio);
+    const matchFechaFin = !fechaFin || fecha <= new Date(fechaFin);
+
+    return matchText && matchEstado && matchFechaInicio && matchFechaFin;
+  });
+
+  const resetearFiltros = () => {
+    setSearchText("");
+    setFiltroEstado("TODOS");
+    setFechaInicio("");
+    setFechaFin("");
+  };
+
+  // MODAL
+  const abrirModal = () => {
+    setShowAgregarCompra(true);
+    setProveedorCompra({ id: "", nombre: "", mostrarDropdown: false });
+    setProductosCompra([]);
+  };
+
+  const cerrarModal = () => setShowAgregarCompra(false);
+
+  const agregarProducto = () => {
+    setProductosCompra([
+      ...productosCompra,
+      { productoId: "", nombreProducto: "", cantidad: 1, precioUnitario: 0, mostrarDropdown: false },
+    ]);
+  };
+
+  const seleccionarProducto = (idx, prod) => {
+    const copia = [...productosCompra];
+    copia[idx] = {
+      ...copia[idx],
+      productoId: prod.id,
+      nombreProducto: prod.nombre,
+      precioUnitario: Number(prod.precio) || 0,
+      mostrarDropdown: false,
+    };
+    setProductosCompra(copia);
+  };
+
+  const actualizarProducto = (idx, field, value) => {
+    const copia = [...productosCompra];
+    copia[idx][field] =
+      field === "cantidad" || field === "precioUnitario" ? Number(value) : value;
+    setProductosCompra(copia);
+  };
+
+  const eliminarProducto = (idx) => {
+    setProductosCompra(productosCompra.filter((_, i) => i !== idx));
+  };
+
+  const seleccionarProveedor = (p) => {
+    setProveedorCompra({ id: p.id, nombre: p.nombre, mostrarDropdown: false });
+  };
+
+  const totalCompra = productosCompra.reduce(
+    (acc, p) => acc + p.cantidad * p.precioUnitario,
+    0
+  );
+
+  const guardarCompra = async () => {
+    if (!proveedorCompra.id || productosCompra.length === 0) {
+      alert("Seleccione proveedor y productos");
+      return;
+    }
+
+    try {
+      // Crear compra
+      const compraRes = await axiosInstance.post("/compra/crear", {
+        proveedor_id: proveedorCompra.id,
+        user_id: 1,
+      });
+      const compra = compraRes.data;
+
+      // Crear detalle de compra
+      await axiosInstance.post(
+        "/detalleCompra/bulk",
+        productosCompra.map((p) => ({
+          compra_id: compra.id,
+          producto_id: p.productoId,
+          cantidad: p.cantidad,
+          precio_unitario: p.precioUnitario,
+        }))
+      );
+
+      cerrarModal();
+      fetchCompras();
+    } catch (err) {
+      console.error("Error guardar compra:", err);
+      alert("Error al guardar la compra");
+    }
+  };
+
+  return (
+    <div className="reportes-outer">
+      <div className="reportes-card">
+        <h1 className="reportes-title">Reporte de Compras</h1>
+
+        {/* FILTROS Y BOTON DE AGREGAR COMPRA */}
+        <div className="filter-bar real-filters">
+          <div className="filter-group">
+            <label>Desde:</label>
+            <input
+              type="date"
+              value={fechaInicio}
+              onChange={(e) => setFechaInicio(e.target.value)}
+              className="input-fecha"
+            />
+          </div>
+          <div className="filter-group">
+            <label>Hasta:</label>
+            <input
+              type="date"
+              value={fechaFin}
+              onChange={(e) => setFechaFin(e.target.value)}
+              className="input-fecha"
+            />
+          </div>
+          <div className="filter-group">
+            <label>Estado:</label>
+            <select value={filtroEstado} onChange={(e) => setFiltroEstado(e.target.value)}>
+              <option value="TODOS">Todos</option>
+              <option value="activo">Activo</option>
+              <option value="anulado">Anulado</option>
+            </select>
+          </div>
+          <button
+            className="btn-gray"
+            onClick={() => {
+              setFechaInicio("");
+              setFechaFin("");
+              setFiltroEstado("TODOS");
+              setSearchText("");
+            }}
+          >
+            Resetear Filtros
+          </button>
+          <button className="btn-add-venta" onClick={abrirModal}>
+            + Agregar Compra
+          </button>
+        </div>
+
+<<<<<<< HEAD
+=======
+export default ReportesCompras;
+=======
 import "./ReportesCompras.css";
 import { useEffect, useState } from "react";
 import axiosInstance from "../api/axiosInstance";
@@ -214,6 +441,7 @@ const ReportesCompras = () => {
           </button>
         </div>
 
+>>>>>>> develop
         {/* ACCIONES */}
         <div className="actions-bar">
           <div className="left-actions">
@@ -466,3 +694,7 @@ const ReportesCompras = () => {
 };
 
 export default ReportesCompras;
+<<<<<<< HEAD
+=======
+>>>>>>> develop
+>>>>>>> develop

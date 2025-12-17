@@ -10,15 +10,23 @@ import reportesIcon from '../images/ReportesIcon.png';
 import usuariosIcon from '../images/UsuariosIcon.png';
 import proveedoresIcon from '../images/ProveedoresIcon.png';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 const Header = () => {
 
     const [reportesMenu, setReportesMenu] = useState(false);
     const [navigateView, setNavigateView] = useState(0);
     const navigate = useNavigate();
 
+<<<<<<< HEAD
     useEffect(() => {
         switch (navigateView) {
+=======
+    useEffect(()=>{
+        switch(navigateView){
+>>>>>>> develop
             case 0:
                 navigate("/gestion/productos");
                 break;
@@ -42,6 +50,7 @@ const Header = () => {
         }
     }, [navigateView, navigate]);
 
+<<<<<<< HEAD
     return (
         <div>
             <div className='top-container'>
@@ -62,13 +71,39 @@ const Header = () => {
                         src={searchIcon}
                         alt='SearchIcon'
                         style={{ width: '25px', height: '25px' }}
+=======
+    return(
+        <div>
+            <div className='top-container'>
+                <img
+                src={logo}
+                alt='Logo' 
+                style={{width: '100px', height: '100px'}} 
+                />
+                <div className='search-input'>
+                    <input
+                    className='search-line'
+                    type='text'
+                    placeholder='Buscar Opciones...'
+                    ></input>
+                    <img
+                    src={searchIcon}
+                    alt='SearchIcon'
+                    style={{width: '25px', height: '25px'}}
+>>>>>>> develop
                     />
                 </div>
                 <div className='profile'>
                     <img
+<<<<<<< HEAD
                         src={userIcon}
                         alt='userIcon'
                         style={{ width: '40px', height: '40px' }}
+=======
+                    src={userIcon}
+                    alt='userIcon'
+                    style={{width: '40px', height: '40px'}}
+>>>>>>> develop
                     />
                     <div className='user-info'>
                         <label className='username'>Usuario</label>
@@ -79,6 +114,7 @@ const Header = () => {
             <div className='bottom-container'>
                 <div className='options'>
                     <img
+<<<<<<< HEAD
                         src={dashboardIcon}
                         alt='icon'
                         style={{ width: '50px', height: '50px' }}
@@ -106,10 +142,40 @@ const Header = () => {
                         src={reportesIcon}
                         alt='icon'
                         style={{ width: '50px', height: '50px' }}
+=======
+                    src={dashboardIcon}
+                    alt='icon' 
+                    style={{width: '50px', height: '50px'}} 
+                    />
+                    <label>Dashboard</label>
+                </div>
+                <div className='options' onClick={()=>setNavigateView(0)}>
+                    <img
+                    src={inventoryIcon}
+                    alt='icon' 
+                    style={{width: '50px', height: '50px'}} 
+                    />
+                    <label>Inventario</label>
+                </div>
+                <div className='options' onClick={()=>setNavigateView(1)}>
+                    <img
+                    src={usuariosIcon}
+                    alt='icon' 
+                    style={{width: '50px', height: '50px'}} 
+                    />
+                    <label>Usuarios</label>
+                </div>
+                <div className='options' onClick={()=>setReportesMenu(!reportesMenu)}>
+                    <img
+                    src={reportesIcon}
+                    alt='icon' 
+                    style={{width: '50px', height: '50px'}} 
+>>>>>>> develop
                     />
                     <label>Reportes</label>
                     {reportesMenu && (
                         <div className='dropdown-reportes'>
+<<<<<<< HEAD
                             <label className='dropdown-options' onClick={() => setNavigateView(3)}>
                                 Reportes de Ventas
                             </label>
@@ -117,16 +183,33 @@ const Header = () => {
                                 Reportes de Compras
                             </label>
                             <label className='dropdown-options' onClick={() => setNavigateView(5)}>
+=======
+                            <label className='dropdown-options' onClick={()=>setNavigateView(3)}>
+                                Reportes de Ventas
+                            </label>
+                            <label className='dropdown-options' onClick={()=>setNavigateView(4)}>
+                                Reportes de Compras
+                            </label>
+                            <label className='dropdown-options' onClick={()=>setNavigateView(5)}>
+>>>>>>> develop
                                 Auditoria
                             </label>
                         </div>
                     )}
                 </div>
+<<<<<<< HEAD
                 <div className='options' onClick={() => setNavigateView(2)}>
                     <img
                         src={proveedoresIcon}
                         alt='icon'
                         style={{ width: '50px', height: '50px' }}
+=======
+                <div className='options' onClick={()=>setNavigateView(2)}>
+                    <img
+                    src={proveedoresIcon}
+                    alt='icon' 
+                    style={{width: '50px', height: '50px'}} 
+>>>>>>> develop
                     />
                     <label>Proveedores</label>
                 </div>
